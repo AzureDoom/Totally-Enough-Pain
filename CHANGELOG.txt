@@ -1,6 +1,3 @@
-v.1.0.1
+v.1.0.2
 
-- Zombies and Zombified Piglins now have a 30% of gaining the same speed boost as baby zombies. 
-- Zombies and Zombified Piglins now spawn with weapons always, Golden on Easy, Iron on Normal and Diamond on Hard.
-- Zombified Piglins can now attack on sight.
-- Zombified Piglins can now attack Villagers.
+- Configurable Creeper Explosion power.

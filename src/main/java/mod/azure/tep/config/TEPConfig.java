@@ -59,6 +59,7 @@ public class TEPConfig implements ConfigData {
 		public boolean creeper_attacks_villagers = true;
 		public boolean creeper_attacks_irongolems = true;
 		public boolean creeper_blowsup_door = true;
+		public int creeper_power = 3;
 	}
 
 	public static class Ghasts {

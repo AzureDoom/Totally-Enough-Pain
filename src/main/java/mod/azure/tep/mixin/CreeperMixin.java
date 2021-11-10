@@ -26,6 +26,9 @@ import net.minecraft.world.World;
 @Mixin(CreeperEntity.class)
 public abstract class CreeperMixin extends HostileEntity {
 
+	@Shadow
+	private int explosionRadius = TotallyEnoughPainMod.config.creepers.creeper_power;
+
 	protected CreeperMixin(EntityType<? extends HostileEntity> entityType, World world) {
 		super(entityType, world);
 	}

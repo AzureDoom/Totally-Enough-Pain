@@ -7,6 +7,7 @@
 	"text.autoconfig.tep.option.creepers.creeper_attacks_villagers": "Attack Villagers",
 	"text.autoconfig.tep.option.creepers.creeper_attacks_irongolems": "Attack Iron Golems",
 	"text.autoconfig.tep.option.creepers.creeper_blowsup_door": "Explodes at Doors",
+	"text.autoconfig.tep.option.creepers.creeper_power": "Explode Power",
 	"text.autoconfig.tep.option.ghasts": "Ghast Settings",
 	"text.autoconfig.tep.option.ghasts.ghast_fire_power": "Explode Power",
 	"text.autoconfig.tep.option.ghasts.ghast_attacks_villagers": "Attack Villagers",
