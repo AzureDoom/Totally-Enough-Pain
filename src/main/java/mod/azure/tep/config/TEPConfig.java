@@ -69,6 +69,11 @@ public class TEPConfig implements ConfigData {
 	public static class Zombies {
 		public int zombies_break_door = 80;
 		public boolean zombies_dont_burn = true;
+		public float zombies_enchanted_more = 80;
+		public boolean zombies_better_gear = true;
+		public boolean zombies_runners = true;
+		public boolean zombiepiglin_onsight = true;
+		public boolean zombiepiglin_attacks_villagers = true;
 	}
 
 	public static class Skeletons {

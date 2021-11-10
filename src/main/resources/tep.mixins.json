@@ -21,7 +21,8 @@
 		"VexMixin",
 		"WitherMixin",
 		"ZombieDoorMixin",
-		"ZombieMixin"
+		"ZombieMixin",
+		"ZombiePiglinMixin"
 	],
 	"client": [
 	],

@@ -1,3 +1,6 @@
-v.1.0.0
+v.1.0.1
 
-- First Release
+- Zombies and Zombified Piglins now have a 30% of gaining the same speed boost as baby zombies. 
+- Zombies and Zombified Piglins now spawn with weapons always, Golden on Easy, Iron on Normal and Diamond on Hard.
+- Zombified Piglins can now attack on sight.
+- Zombified Piglins can now attack Villagers.
