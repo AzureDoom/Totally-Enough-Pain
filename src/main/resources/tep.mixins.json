@@ -1,0 +1,31 @@
+{
+	"required": true,
+	"minVersion": "0.8",
+	"package": "mod.azure.tep.mixin",
+	"compatibilityLevel": "JAVA_16",
+	"mixins": [
+		"BlazeMixin",
+		"CreeperMixin",
+		"CreeperExplodeMixin",
+		"EndermanMixin",
+		"EndermiteMixin",
+		"FireBallMixin",
+		"GhastMixin",
+		"MagmaMixin",
+		"PhantomSpawningMixin",
+		"ShulkerMixin",
+		"SkeletonMixin",
+		"SlimeMixin",
+		"SilverfishMixin",
+		"SpiderMixin",
+		"VexMixin",
+		"WitherMixin",
+		"ZombieDoorMixin",
+		"ZombieMixin"
+	],
+	"client": [
+	],
+	"injectors": {
+		"defaultRequire": 1
+	}
+}
