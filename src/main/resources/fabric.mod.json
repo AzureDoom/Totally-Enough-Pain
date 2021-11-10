@@ -3,7 +3,7 @@
 	"id": "tep",
 	"version": "${version}",
 	"name": "Totally Enough Pain",
-	"description": "Minecraft but you die, sorry",
+	"description": "Minecraft Hardcore mod for Fabric",
 	"authors": [
 		"AzureDoom",
 		"bvanseg"
@@ -31,7 +31,8 @@
 		"fabricloader": ">=0.11.3",
 		"fabric": "*",
 		"minecraft": "1.17.x",
-		"java": ">=16"
+		"java": ">=16",
+		"cloth-config2": "*"
 	},
 	"accessWidener": "tep.accesswidener"
 }
