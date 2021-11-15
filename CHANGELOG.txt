@@ -1,3 +1,4 @@
-v.1.0.2
+v.1.0.3
 
-- Configurable Creeper Explosion power.
+- Fixes Crash due to miscopied accesswidener from another project.
+- Fixes Phantom Mixin with architectury.
