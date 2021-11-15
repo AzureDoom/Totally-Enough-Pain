@@ -4,8 +4,10 @@ import java.util.Iterator;
 import java.util.Random;
 
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.EntityData;
@@ -29,8 +31,8 @@ public class PhantomSpawningMixin {
 	@Shadow
 	private int ticksUntilNextSpawn;
 
-	@Overwrite
-	public int spawn(ServerWorld world, boolean spawnMonsters, boolean spawnAnimals) {
+	@Inject(method = "spawn", at = @At("HEAD"))
+	private int spawning(ServerWorld world, boolean spawnMonsters, boolean spawnAnimals, CallbackInfoReturnable<Integer> ci) {
 		if (!spawnMonsters) {
 			return 0;
 		} else if (!world.getGameRules().getBoolean(GameRules.DO_INSOMNIA)) {
