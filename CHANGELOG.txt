@@ -1,4 +1,3 @@
-v.1.0.3
+v.1.0.1
 
-- Fixes Crash due to miscopied accesswidener from another project.
-- Fixes Phantom Mixin with architectury.
+- Min depend of 0.14.2 instead of 0.14.4

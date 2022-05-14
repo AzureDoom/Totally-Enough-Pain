@@ -5,7 +5,7 @@ buildscript {
 }
 
 plugins {
-	id 'fabric-loom' version '0.10-SNAPSHOT'
+    id 'fabric-loom' version '0.11-SNAPSHOT'
 	id 'maven-publish'
     id 'com.matthewprenger.cursegradle' version '1.4.0'
 }
@@ -13,8 +13,8 @@ plugins {
 import groovy.json.JsonSlurper
 import groovy.json.JsonOutput
 
-sourceCompatibility = JavaVersion.VERSION_16
-targetCompatibility = JavaVersion.VERSION_16
+sourceCompatibility = JavaVersion.VERSION_17
+targetCompatibility = JavaVersion.VERSION_17
 
 archivesBaseName = project.archives_base_name
 version = project.mod_version
@@ -31,32 +31,33 @@ dependencies {
 	mappings "net.fabricmc:yarn:${project.yarn_mappings}:v2"
 	modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
 	modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
-	modApi("me.shedaniel.cloth:cloth-config-fabric:5.0.38") {
-        exclude(group: "net.fabricmc.fabric-api")
+    modApi("me.shedaniel.cloth:cloth-config-fabric:6.2.57") {
+    	exclude(group: "net.fabricmc.fabric-api")
     }
-	modImplementation 'curse.maven:modmenu-308702:3431313'
+	modImplementation("curse.maven:modmenu-308702:3472549") {
+    	exclude(group: "net.fabricmc.fabric-api")
+    }
 }
 
 processResources {
-	inputs.property "version", project.version
+    inputs.property "version", project.version
+
 	filesMatching("fabric.mod.json") {
 		expand "version": project.version
 	}
 }
 
 tasks.withType(JavaCompile).configureEach {
-	it.options.encoding = "UTF-8"
-	it.options.release = 16
+    it.options.release = 17
 }
 
-java {
-	withSourcesJar()
+task sourcesJar(type: Jar, dependsOn: classes) {
+	classifier = "sources"
+	from sourceSets.main.allSource
 }
 
 jar {
-	from("LICENSE") {
-		rename { "${it}_${project.archivesBaseName}"}
-	}
+	from "LICENSE"
 }
 
 publishing {
@@ -101,9 +102,9 @@ if (file('key.properties').exists()) {
         	releaseType = "release"
         	changelogType = 'text'
         	changelog = file('CHANGELOG.txt')
-			addGameVersion("1.17.1")
+			addGameVersion("1.18.2")
 			addGameVersion("Fabric")
-			addGameVersion("Java 16")
+			addGameVersion("Java 17")
         	relations {
             	requiredDependency 'fabric-api'  
             	requiredDependency 'cloth-config'  
