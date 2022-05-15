@@ -2,6 +2,7 @@ package mod.azure.tep.mixin;
 
 import java.util.SplittableRandom;
 import java.util.UUID;
+import java.util.function.Predicate;
 
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
@@ -16,6 +17,7 @@ import net.minecraft.entity.EntityData;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.SpawnReason;
+import net.minecraft.entity.ai.goal.BreakDoorGoal;
 import net.minecraft.entity.attribute.EntityAttributeInstance;
 import net.minecraft.entity.attribute.EntityAttributeModifier;
 import net.minecraft.entity.attribute.EntityAttributes;
@@ -35,13 +37,34 @@ public abstract class ZombieMixin extends HostileEntity {
 	EntityAttributeInstance entityAttributeInstance = this
 			.getAttributeInstance(EntityAttributes.GENERIC_MOVEMENT_SPEED);
 
+	private static final Predicate<Difficulty> DOOR_BREAK_DIFFICULTY_CHECKER = (difficulty) -> {
+		return difficulty == Difficulty.HARD || difficulty == Difficulty.EASY || difficulty == Difficulty.NORMAL;
+	};
+
 	protected ZombieMixin(EntityType<? extends HostileEntity> entityType, World world) {
 		super(entityType, world);
 	}
 
+	@Inject(at = @At("RETURN"), method = "burnsInDaylight", cancellable = true)
+	private void noBurny(CallbackInfoReturnable<Boolean> cir) {
+		if (TotallyEnoughPainMod.config.zombies.zombies_dont_burn == true)
+			cir.setReturnValue(false);
+	}
+
+	@Inject(method = "initialize", at = @At("HEAD"), cancellable = true)
+	private void spiderJockeys(ServerWorldAccess world, LocalDifficulty difficulty, SpawnReason spawnReason,
+			@Nullable EntityData entityData, @Nullable NbtCompound entityNbt, CallbackInfoReturnable<EntityData> cir) {
+		this.setCanBreakDoors(true);
+	}
+
 	@Overwrite
-	public boolean burnsInDaylight() {
-		return TotallyEnoughPainMod.config.zombies.zombies_dont_burn ? false : true;
+	public boolean canBreakDoors() {
+		return true;
+	}
+
+	@Overwrite
+	public void setCanBreakDoors(boolean canBreakDoors) {
+		this.goalSelector.add(1, new BreakDoorGoal(this, DOOR_BREAK_DIFFICULTY_CHECKER));
 	}
 
 	@Inject(method = "initialize", at = @At("HEAD"))

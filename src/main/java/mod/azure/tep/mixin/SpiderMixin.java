@@ -2,25 +2,22 @@ package mod.azure.tep.mixin;
 
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import mod.azure.tep.TotallyEnoughPainMod;
 import net.minecraft.entity.EntityData;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.SpawnReason;
 import net.minecraft.entity.ai.goal.ActiveTargetGoal;
-import net.minecraft.entity.effect.StatusEffect;
-import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.mob.HostileEntity;
 import net.minecraft.entity.mob.SkeletonEntity;
 import net.minecraft.entity.mob.SpiderEntity;
 import net.minecraft.entity.passive.MerchantEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.NbtCompound;
-import net.minecraft.world.Difficulty;
 import net.minecraft.world.LocalDifficulty;
 import net.minecraft.world.ServerWorldAccess;
 import net.minecraft.world.World;
@@ -41,29 +38,14 @@ public abstract class SpiderMixin extends HostileEntity {
 			this.targetSelector.add(1, new ActiveTargetGoal(this, MerchantEntity.class, false));
 	}
 
-	@Nullable
-	@Overwrite
-	public EntityData initialize(ServerWorldAccess world, LocalDifficulty difficulty, SpawnReason spawnReason,
-			@Nullable EntityData entityData, @Nullable NbtCompound entityNbt) {
+	@Inject(method = "initialize", at = @At("HEAD"), cancellable = true)
+	private void spiderJockeys(ServerWorldAccess world, LocalDifficulty difficulty, SpawnReason spawnReason,
+			@Nullable EntityData entityData, @Nullable NbtCompound entityNbt, CallbackInfoReturnable<EntityData> cir) {
 		if (TotallyEnoughPainMod.config.spiders.spider_always_jockeys == true || world.getRandom().nextInt(100) == 0) {
 			SkeletonEntity skeletonEntity = (SkeletonEntity) EntityType.SKELETON.create(this.world);
 			skeletonEntity.refreshPositionAndAngles(this.getX(), this.getY(), this.getZ(), this.getYaw(), 0.0F);
 			skeletonEntity.initialize(world, difficulty, spawnReason, (EntityData) null, (NbtCompound) null);
 			skeletonEntity.startRiding(this);
 		}
-		if (entityData == null) {
-			entityData = new SpiderEntity.SpiderData();
-			if (world.getDifficulty() == Difficulty.HARD
-					&& world.getRandom().nextFloat() < 0.1F * difficulty.getClampedLocalDifficulty()) {
-				((SpiderEntity.SpiderData) entityData).setEffect(world.getRandom());
-			}
-		}
-		if (entityData instanceof SpiderEntity.SpiderData) {
-			StatusEffect statusEffect = ((SpiderEntity.SpiderData) entityData).effect;
-			if (statusEffect != null) {
-				this.addStatusEffect(new StatusEffectInstance(statusEffect, Integer.MAX_VALUE));
-			}
-		}
-		return super.initialize(world, difficulty, spawnReason, entityData, entityNbt);
 	}
 }

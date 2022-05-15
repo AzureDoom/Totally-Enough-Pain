@@ -1,7 +1,6 @@
 package mod.azure.tep.mixin;
 
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -32,16 +31,12 @@ public abstract class CreeperExplodeMixin extends Goal {
 			this.creeper.getNavigation().startMovingTo(target, 1.0D);
 	}
 
-	@Overwrite
-	public void tick() {
-		if (this.target == null) {
-			this.creeper.setFuseSpeed(-1);
-		} else if (TotallyEnoughPainMod.config.creepers.creeper_blowsup_door == true
+	@Inject(method = "tick", at = @At("TAIL"))
+	private void tickStart(CallbackInfo ci) {
+		if (TotallyEnoughPainMod.config.creepers.creeper_blowsup_door == true
 				&& this.creeper.getVisibilityCache().canSee(this.target)
 				&& this.creeper.squaredDistanceTo(this.target) <= 3.0D) {
 			this.creeper.setFuseSpeed(-1);
-		} else {
-			this.creeper.setFuseSpeed(1);
 		}
 	}
 }
