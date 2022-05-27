@@ -5,7 +5,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import mod.azure.tep.TotallyEnoughPainMod;
+import mod.azure.tep.config.TEPConfig;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.ai.goal.ActiveTargetGoal;
 import net.minecraft.entity.mob.HostileEntity;
@@ -24,9 +24,9 @@ public abstract class ZombiePiglinMixin extends HostileEntity {
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@Inject(method = "initCustomGoals", at = @At("HEAD"))
 	private void attackGoals(CallbackInfo ci) {
-		if (TotallyEnoughPainMod.config.zombies.zombiepiglin_onsight == true)
+		if (TEPConfig.zombiepiglin_onsight == true)
 			this.targetSelector.add(1, new ActiveTargetGoal(this, PlayerEntity.class, false));
-		if (TotallyEnoughPainMod.config.zombies.zombiepiglin_attacks_villagers == true)
+		if (TEPConfig.zombiepiglin_attacks_villagers == true)
 			this.targetSelector.add(1, new ActiveTargetGoal(this, MerchantEntity.class, false));
 	}
 

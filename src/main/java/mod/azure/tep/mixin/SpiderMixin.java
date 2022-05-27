@@ -7,7 +7,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-import mod.azure.tep.TotallyEnoughPainMod;
+import mod.azure.tep.config.TEPConfig;
 import net.minecraft.entity.EntityData;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.SpawnReason;
@@ -32,16 +32,16 @@ public abstract class SpiderMixin extends HostileEntity {
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@Inject(method = "initGoals", at = @At("HEAD"))
 	private void attackGoals(CallbackInfo ci) {
-		if (TotallyEnoughPainMod.config.spiders.spider_always_attack == true)
+		if (TEPConfig.spider_always_attack == true)
 			this.targetSelector.add(1, new ActiveTargetGoal(this, PlayerEntity.class, false));
-		if (TotallyEnoughPainMod.config.spiders.spider_attacks_villagers == true)
+		if (TEPConfig.spider_attacks_villagers == true)
 			this.targetSelector.add(1, new ActiveTargetGoal(this, MerchantEntity.class, false));
 	}
 
 	@Inject(method = "initialize", at = @At("HEAD"), cancellable = true)
 	private void spiderJockeys(ServerWorldAccess world, LocalDifficulty difficulty, SpawnReason spawnReason,
 			@Nullable EntityData entityData, @Nullable NbtCompound entityNbt, CallbackInfoReturnable<EntityData> cir) {
-		if (TotallyEnoughPainMod.config.spiders.spider_always_jockeys == true || world.getRandom().nextInt(100) == 0) {
+		if (TEPConfig.spider_always_jockeys == true || world.getRandom().nextInt(100) == 0) {
 			SkeletonEntity skeletonEntity = (SkeletonEntity) EntityType.SKELETON.create(this.world);
 			skeletonEntity.refreshPositionAndAngles(this.getX(), this.getY(), this.getZ(), this.getYaw(), 0.0F);
 			skeletonEntity.initialize(world, difficulty, spawnReason, (EntityData) null, (NbtCompound) null);

@@ -6,7 +6,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import mod.azure.tep.TotallyEnoughPainMod;
+import mod.azure.tep.config.TEPConfig;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.goal.CreeperIgniteGoal;
 import net.minecraft.entity.ai.goal.Goal;
@@ -27,14 +27,13 @@ public abstract class CreeperExplodeMixin extends Goal {
 
 	@Inject(method = "start", at = @At("TAIL"))
 	private void attackStart(CallbackInfo ci) {
-		if (TotallyEnoughPainMod.config.creepers.creeper_doesnt_stop == true)
+		if (TEPConfig.creeper_doesnt_stop == true)
 			this.creeper.getNavigation().startMovingTo(target, 1.0D);
 	}
 
 	@Inject(method = "tick", at = @At("TAIL"))
 	private void tickStart(CallbackInfo ci) {
-		if (TotallyEnoughPainMod.config.creepers.creeper_blowsup_door == true
-				&& this.creeper.getVisibilityCache().canSee(this.target)
+		if (TEPConfig.creeper_blowsup_door == true && this.creeper.getVisibilityCache().canSee(this.target)
 				&& this.creeper.squaredDistanceTo(this.target) <= 3.0D) {
 			this.creeper.setFuseSpeed(-1);
 		}

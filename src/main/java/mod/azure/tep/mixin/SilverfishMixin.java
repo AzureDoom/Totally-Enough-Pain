@@ -5,7 +5,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import mod.azure.tep.TotallyEnoughPainMod;
+import mod.azure.tep.config.TEPConfig;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.ai.goal.ActiveTargetGoal;
 import net.minecraft.entity.mob.HostileEntity;
@@ -23,7 +23,7 @@ public abstract class SilverfishMixin extends HostileEntity {
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@Inject(method = "initGoals", at = @At("HEAD"))
 	private void attackGoals(CallbackInfo ci) {
-		if (TotallyEnoughPainMod.config.silverfish.silverfish_attacks_villagers == true)
+		if (TEPConfig.silverfish_attacks_villagers == true)
 			this.targetSelector.add(1, new ActiveTargetGoal(this, MerchantEntity.class, false));
 	}
 }

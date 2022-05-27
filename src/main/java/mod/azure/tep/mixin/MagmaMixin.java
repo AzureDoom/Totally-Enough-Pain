@@ -5,7 +5,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-import mod.azure.tep.TotallyEnoughPainMod;
+import mod.azure.tep.config.TEPConfig;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.mob.MagmaCubeEntity;
 import net.minecraft.entity.mob.MobEntity;
@@ -19,12 +19,12 @@ public class MagmaMixin extends MobEntity {
 	}
 
 	public boolean doesRenderOnFire() {
-		return TotallyEnoughPainMod.config.magma.magma_render_onfire == false ? false : super.isOnFire();
+		return TEPConfig.magma_render_onfire == false ? false : super.isOnFire();
 	}
 
 	@Inject(at = @At("RETURN"), method = "isOnFire", cancellable = true)
 	private void onFireYo(CallbackInfoReturnable<Boolean> cir) {
-		if (TotallyEnoughPainMod.config.magma.magma_onfire == true)
+		if (TEPConfig.magma_onfire == true)
 			cir.setReturnValue(true);
 	}
 

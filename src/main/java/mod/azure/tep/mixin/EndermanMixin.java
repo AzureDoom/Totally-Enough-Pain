@@ -5,7 +5,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import mod.azure.tep.TotallyEnoughPainMod;
+import mod.azure.tep.config.TEPConfig;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.ai.goal.ActiveTargetGoal;
 import net.minecraft.entity.mob.EndermanEntity;
@@ -24,9 +24,9 @@ public abstract class EndermanMixin extends HostileEntity {
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@Inject(method = "initGoals", at = @At("HEAD"))
 	private void attackGoals(CallbackInfo ci) {
-		if (TotallyEnoughPainMod.config.enderman.enderman_always_attack == true)
+		if (TEPConfig.enderman_always_attack == true)
 			this.targetSelector.add(1, new ActiveTargetGoal(this, PlayerEntity.class, false));
-		if (TotallyEnoughPainMod.config.enderman.enderman_attacks_villagers == true)
+		if (TEPConfig.enderman_attacks_villagers == true)
 			this.targetSelector.add(1, new ActiveTargetGoal(this, MerchantEntity.class, false));
 	}
 }

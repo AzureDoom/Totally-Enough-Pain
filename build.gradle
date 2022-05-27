@@ -24,6 +24,7 @@ repositories {
 	maven { url 'https://www.cursemaven.com' }
     maven { url  = 'https://plugins.gradle.org/m2/' }
     maven { url "https://maven.shedaniel.me/" }
+    maven { url "https://api.modrinth.com/maven" }
 }
 
 dependencies {
@@ -37,6 +38,7 @@ dependencies {
 	modImplementation("curse.maven:modmenu-308702:3472549") {
     	exclude(group: "net.fabricmc.fabric-api")
     }
+    modImplementation "maven.modrinth:midnightlib:0.4.0"
 }
 
 processResources {
@@ -107,7 +109,6 @@ if (file('key.properties').exists()) {
 			addGameVersion("Java 17")
         	relations {
             	requiredDependency 'fabric-api'  
-            	requiredDependency 'cloth-config'  
         	}
         	mainArtifact(remapJar)
 

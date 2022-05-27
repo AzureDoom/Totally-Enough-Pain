@@ -6,7 +6,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-import mod.azure.tep.TotallyEnoughPainMod;
+import mod.azure.tep.config.TEPConfig;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.ai.goal.ActiveTargetGoal;
 import net.minecraft.entity.mob.BlazeEntity;
@@ -24,13 +24,13 @@ public abstract class BlazeMixin extends HostileEntity {
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@Inject(method = "initGoals", at = @At("HEAD"))
 	private void attackGoals(CallbackInfo ci) {
-		if (TotallyEnoughPainMod.config.blaze.blaze_attacks_villagers == true)
+		if (TEPConfig.blaze_attacks_villagers == true)
 			this.targetSelector.add(1, new ActiveTargetGoal(this, MerchantEntity.class, false));
 	}
 
 	@Inject(at = @At("RETURN"), method = "isOnFire", cancellable = true)
 	private void onFireYo(CallbackInfoReturnable<Boolean> cir) {
-		if (TotallyEnoughPainMod.config.blaze.blaze_always_onfire == true)
+		if (TEPConfig.blaze_always_onfire == true)
 			cir.setReturnValue(true);
 	}
 }

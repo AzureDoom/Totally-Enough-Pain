@@ -8,7 +8,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import mod.azure.tep.TotallyEnoughPainMod;
+import mod.azure.tep.config.TEPConfig;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.ai.goal.ActiveTargetGoal;
 import net.minecraft.entity.ai.goal.BreakDoorGoal;
@@ -27,7 +27,7 @@ import net.minecraft.world.World;
 public abstract class CreeperMixin extends HostileEntity {
 
 	@Shadow
-	private int explosionRadius = TotallyEnoughPainMod.config.creepers.creeper_power;
+	private int explosionRadius = TEPConfig.creeper_power;
 
 	protected CreeperMixin(EntityType<? extends HostileEntity> entityType, World world) {
 		super(entityType, world);
@@ -48,16 +48,16 @@ public abstract class CreeperMixin extends HostileEntity {
 
 	@Inject(method = "tick", at = @At("HEAD"))
 	private void superCharged(CallbackInfo ci) {
-		if (TotallyEnoughPainMod.config.creepers.creeper_always_charged == true)
+		if (TEPConfig.creeper_always_charged == true)
 			this.dataTracker.set(CHARGED, true);
 	}
 
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@Inject(method = "initGoals", at = @At("HEAD"))
 	private void attackGoals(CallbackInfo ci) {
-		if (TotallyEnoughPainMod.config.creepers.creeper_attacks_irongolems == true)
+		if (TEPConfig.creeper_attacks_irongolems == true)
 			this.targetSelector.add(1, new ActiveTargetGoal(this, IronGolemEntity.class, false));
-		if (TotallyEnoughPainMod.config.creepers.creeper_attacks_villagers == true)
+		if (TEPConfig.creeper_attacks_villagers == true)
 			this.targetSelector.add(1, new ActiveTargetGoal(this, MerchantEntity.class, false));
 		this.targetSelector.add(1, new BreakDoorGoal(this, DOOR_BREAK_DIFFICULTY_CHECKER));
 	}

@@ -1,135 +1,90 @@
 package mod.azure.tep.config;
 
-import me.shedaniel.autoconfig.ConfigData;
-import me.shedaniel.autoconfig.annotation.Config;
-import me.shedaniel.autoconfig.annotation.ConfigEntry;
+public class TEPConfig extends CustomMidnightConfig {
 
-@Config(name = "tep")
-public class TEPConfig implements ConfigData {
+	@Entry
+	public static boolean creeper_doesnt_stop = true;
+	@Entry
+	public static boolean creeper_always_charged = true;
+	@Entry
+	public static boolean creeper_explodes_faster = true;
+	@Entry
+	public static boolean creeper_attacks_villagers = true;
+	@Entry
+	public static boolean creeper_attacks_irongolems = true;
+	@Entry
+	public static boolean creeper_blowsup_door = true;
+	@Entry
+	public static int creeper_power = 3;
 
-	@ConfigEntry.Gui.CollapsibleObject
-	public Blaze blaze = new Blaze();
+	@Entry
+	public static int ghast_fire_power = 4;
+	@Entry
+	public static boolean ghast_attacks_villagers = true;
 
-	@ConfigEntry.Gui.CollapsibleObject
-	public Creepers creepers = new Creepers();
+	@Entry
+	public static int zombies_break_door = 80;
+	@Entry
+	public static boolean zombies_dont_burn = true;
+	@Entry
+	public static float zombies_enchanted_more = 80;
+	@Entry
+	public static boolean zombies_better_gear = true;
+	@Entry
+	public static boolean zombies_runners = true;
+	@Entry
+	public static boolean zombiepiglin_onsight = true;
+	@Entry
+	public static boolean zombiepiglin_attacks_villagers = true;
 
-	@ConfigEntry.Gui.CollapsibleObject
-	public Enderman enderman = new Enderman();
+	@Entry
+	public static float skeletons_enchanted_more = 80;
+	@Entry
+	public static boolean skeletons_attacks_villagers = true;
+	@Entry
+	public static boolean skeletons_dont_burn = true;
 
-	@ConfigEntry.Gui.CollapsibleObject
-	public Endermite endermite = new Endermite();
+	@Entry
+	public static boolean enderman_always_attack = true;
+	@Entry
+	public static boolean enderman_attacks_villagers = true;
 
-	@ConfigEntry.Gui.CollapsibleObject
-	public Ghasts ghasts = new Ghasts();
+	@Entry
+	public static boolean spider_always_attack = true;
+	@Entry
+	public static boolean spider_attacks_villagers = true;
+	@Entry
+	public static boolean spider_always_jockeys = true;
 
-	@ConfigEntry.Gui.CollapsibleObject
-	public Magma magma = new Magma();
+	@Entry
+	public static boolean phantoms_always_spawn = true;
 
-	@ConfigEntry.Gui.CollapsibleObject
-	public Phantoms phantoms = new Phantoms();
-	
-	@ConfigEntry.Gui.CollapsibleObject
-	public Shulker shulker = new Shulker();
+	@Entry
+	public static boolean blaze_attacks_villagers = true;
+	@Entry
+	public static boolean blaze_always_onfire = true;
 
-	@ConfigEntry.Gui.CollapsibleObject
-	public Silverfish silverfish = new Silverfish();
+	@Entry
+	public static boolean magma_render_onfire = false;
+	@Entry
+	public static boolean magma_onfire = true;
 
-	@ConfigEntry.Gui.CollapsibleObject
-	public Skeletons skeletons = new Skeletons();
+	@Entry
+	public static boolean endermite_attacks_villagers = true;
 
-	@ConfigEntry.Gui.CollapsibleObject
-	public Slime slimes = new Slime();
+	@Entry
+	public static boolean shulker_attacks_villagers = true;
 
-	@ConfigEntry.Gui.CollapsibleObject
-	public Spiders spiders = new Spiders();
+	@Entry
+	public static boolean silverfish_attacks_villagers = true;
 
-	@ConfigEntry.Gui.CollapsibleObject
-	public Vex vexs = new Vex();
+	@Entry
+	public static boolean slimes_attacks_villagers = true;
 
-	@ConfigEntry.Gui.CollapsibleObject
-	public Wither wither = new Wither();
+	@Entry
+	public static boolean vex_attacks_villagers = true;
 
-	@ConfigEntry.Gui.CollapsibleObject
-	public Zombies zombies = new Zombies();
-
-	public static class Creepers {
-		public boolean creeper_doesnt_stop = true;
-		public boolean creeper_always_charged = true;
-		public boolean creeper_explodes_faster = true;
-		public boolean creeper_attacks_villagers = true;
-		public boolean creeper_attacks_irongolems = true;
-		public boolean creeper_blowsup_door = true;
-		public int creeper_power = 3;
-	}
-
-	public static class Ghasts {
-		public int ghast_fire_power = 4;
-		public boolean ghast_attacks_villagers = true;
-	}
-
-	public static class Zombies {
-		public int zombies_break_door = 80;
-		public boolean zombies_dont_burn = true;
-		public float zombies_enchanted_more = 80;
-		public boolean zombies_better_gear = true;
-		public boolean zombies_runners = true;
-		public boolean zombiepiglin_onsight = true;
-		public boolean zombiepiglin_attacks_villagers = true;
-	}
-
-	public static class Skeletons {
-		public float skeletons_enchanted_more = 80;
-		public boolean skeletons_attacks_villagers = true;
-		public boolean skeletons_dont_burn = true;
-	}
-
-	public static class Enderman {
-		public boolean enderman_always_attack = true;
-		public boolean enderman_attacks_villagers = true;
-	}
-
-	public static class Spiders {
-		public boolean spider_always_attack = true;
-		public boolean spider_attacks_villagers = true;
-		public boolean spider_always_jockeys = true;
-	}
-
-	public static class Phantoms {
-		public boolean phantoms_always_spawn = true;
-	}
-
-	public static class Blaze {
-		public boolean blaze_attacks_villagers = true;
-		public boolean blaze_always_onfire = true;
-	}
-
-	public static class Magma {
-		public boolean magma_render_onfire = false;
-		public boolean magma_onfire = true;
-	}
-
-	public static class Endermite {
-		public boolean endermite_attacks_villagers = true;
-	}
-
-	public static class Shulker {
-		public boolean shulker_attacks_villagers = true;
-	}
-
-	public static class Silverfish {
-		public boolean silverfish_attacks_villagers = true;
-	}
-
-	public static class Slime {
-		public boolean slimes_attacks_villagers = true;
-	}
-
-	public static class Vex {
-		public boolean vex_attacks_villagers = true;
-	}
-
-	public static class Wither {
-		public boolean wither_attacks_villagers = true;
-	}
+	@Entry
+	public static boolean wither_attacks_villagers = true;
 
 }

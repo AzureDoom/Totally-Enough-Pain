@@ -7,7 +7,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import mod.azure.tep.TotallyEnoughPainMod;
+import mod.azure.tep.config.TEPConfig;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.ai.goal.ActiveTargetGoal;
@@ -34,7 +34,7 @@ public abstract class SkeletonMixin extends HostileEntity {
 	public boolean isOnFire() {
 		return false;
 	}
-	
+
 	@Override
 	public void setOnFireFor(int seconds) {
 		super.setOnFireFor(0);
@@ -44,21 +44,20 @@ public abstract class SkeletonMixin extends HostileEntity {
 	@Inject(method = "initGoals", at = @At("HEAD"))
 	private void attackGoals(CallbackInfo ci) {
 		this.targetSelector.add(1, new BreakDoorGoal(this, DOOR_BREAK_DIFFICULTY_CHECKER));
-		if (TotallyEnoughPainMod.config.skeletons.skeletons_attacks_villagers == true)
+		if (TEPConfig.skeletons_attacks_villagers == true)
 			this.targetSelector.add(1, new ActiveTargetGoal(this, MerchantEntity.class, false));
 	}
 
 	protected void updateEnchantments(LocalDifficulty difficulty) {
 		float f = difficulty.getClampedLocalDifficulty();
-		this.enchantMainHandItem(f * TotallyEnoughPainMod.config.skeletons.skeletons_enchanted_more);
+		this.enchantMainHandItem(f * TEPConfig.skeletons_enchanted_more);
 		EquipmentSlot[] var3 = EquipmentSlot.values();
 		int var4 = var3.length;
 
 		for (int var5 = 0; var5 < var4; ++var5) {
 			EquipmentSlot equipmentSlot = var3[var5];
 			if (equipmentSlot.getType() == EquipmentSlot.Type.ARMOR) {
-				this.enchantEquipment(f * TotallyEnoughPainMod.config.skeletons.skeletons_enchanted_more,
-						equipmentSlot);
+				this.enchantEquipment(f * TEPConfig.skeletons_enchanted_more, equipmentSlot);
 			}
 		}
 	}

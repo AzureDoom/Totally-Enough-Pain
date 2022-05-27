@@ -12,7 +12,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-import mod.azure.tep.TotallyEnoughPainMod;
+import mod.azure.tep.config.TEPConfig;
 import net.minecraft.entity.EntityData;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.EquipmentSlot;
@@ -47,7 +47,7 @@ public abstract class ZombieMixin extends HostileEntity {
 
 	@Inject(at = @At("RETURN"), method = "burnsInDaylight", cancellable = true)
 	private void noBurny(CallbackInfoReturnable<Boolean> cir) {
-		if (TotallyEnoughPainMod.config.zombies.zombies_dont_burn == true)
+		if (TEPConfig.zombies_dont_burn == true)
 			cir.setReturnValue(false);
 	}
 
@@ -73,7 +73,7 @@ public abstract class ZombieMixin extends HostileEntity {
 		this.updateEnchantments(difficulty);
 		SplittableRandom random = new SplittableRandom();
 		int r = random.nextInt(0, 10);
-		if (TotallyEnoughPainMod.config.zombies.zombies_runners == true) {
+		if (TEPConfig.zombies_runners == true) {
 			if (r <= 3) {
 				entityAttributeInstance.addTemporaryModifier(
 						new EntityAttributeModifier(UUID.fromString("2cd5b1d6-6ce6-44ab-ac3b-1d0aecd1d0cd"),
@@ -84,7 +84,7 @@ public abstract class ZombieMixin extends HostileEntity {
 
 	@Inject(method = "initEquipment", at = @At("HEAD"))
 	private void moreEquipment(LocalDifficulty difficulty, CallbackInfo ci) {
-		if (TotallyEnoughPainMod.config.zombies.zombies_better_gear == true) {
+		if (TEPConfig.zombies_better_gear == true) {
 			int i = this.random.nextInt(3);
 			if (i == 0) {
 				this.equipStack(EquipmentSlot.MAINHAND, new ItemStack(this.world.getDifficulty() == Difficulty.HARD
@@ -100,13 +100,13 @@ public abstract class ZombieMixin extends HostileEntity {
 
 	protected void updateEnchantments(LocalDifficulty difficulty) {
 		float f = difficulty.getClampedLocalDifficulty();
-		this.enchantMainHandItem(f * TotallyEnoughPainMod.config.zombies.zombies_enchanted_more);
+		this.enchantMainHandItem(f * TEPConfig.zombies_enchanted_more);
 		EquipmentSlot[] var3 = EquipmentSlot.values();
 		int var4 = var3.length;
 		for (int var5 = 0; var5 < var4; ++var5) {
 			EquipmentSlot equipmentSlot = var3[var5];
 			if (equipmentSlot.getType() == EquipmentSlot.Type.ARMOR) {
-				this.enchantEquipment(f * TotallyEnoughPainMod.config.zombies.zombies_enchanted_more, equipmentSlot);
+				this.enchantEquipment(f * TEPConfig.zombies_enchanted_more, equipmentSlot);
 			}
 		}
 	}
