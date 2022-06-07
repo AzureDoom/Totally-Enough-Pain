@@ -100,13 +100,13 @@ public abstract class ZombieMixin extends HostileEntity {
 
 	protected void updateEnchantments(LocalDifficulty difficulty) {
 		float f = difficulty.getClampedLocalDifficulty();
-		this.enchantMainHandItem(f * TEPConfig.zombies_enchanted_more);
+		this.enchantMainHandItem(random, f * TEPConfig.zombies_enchanted_more);
 		EquipmentSlot[] var3 = EquipmentSlot.values();
 		int var4 = var3.length;
 		for (int var5 = 0; var5 < var4; ++var5) {
 			EquipmentSlot equipmentSlot = var3[var5];
 			if (equipmentSlot.getType() == EquipmentSlot.Type.ARMOR) {
-				this.enchantEquipment(f * TEPConfig.zombies_enchanted_more, equipmentSlot);
+				this.enchantEquipment(random, f * TEPConfig.zombies_enchanted_more, equipmentSlot);
 			}
 		}
 	}
