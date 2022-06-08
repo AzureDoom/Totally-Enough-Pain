@@ -26,6 +26,7 @@ import net.minecraft.entity.mob.ZombieEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.util.math.random.Random;
 import net.minecraft.world.Difficulty;
 import net.minecraft.world.LocalDifficulty;
 import net.minecraft.world.ServerWorldAccess;
@@ -83,7 +84,7 @@ public abstract class ZombieMixin extends HostileEntity {
 	}
 
 	@Inject(method = "initEquipment", at = @At("HEAD"))
-	private void moreEquipment(LocalDifficulty difficulty, CallbackInfo ci) {
+	private void moreEquipment(Random random, LocalDifficulty difficulty, CallbackInfo ci) {
 		if (TEPConfig.zombies_better_gear == true) {
 			int i = this.random.nextInt(3);
 			if (i == 0) {
