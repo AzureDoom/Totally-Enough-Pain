@@ -32,12 +32,12 @@ public abstract class SkeletonMixin extends HostileEntity {
 
 	@Override
 	public boolean isOnFire() {
-		return false;
+		return TEPConfig.skeletons_dont_burn == true ? false : super.isOnFire();
 	}
 
 	@Override
 	public void setOnFireFor(int seconds) {
-		super.setOnFireFor(0);
+		super.setOnFireFor(TEPConfig.skeletons_dont_burn == true ? 0 : seconds);
 	}
 
 	@SuppressWarnings({ "rawtypes", "unchecked" })
