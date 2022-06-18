@@ -27,7 +27,7 @@ public abstract class CreeperExplodeMixin extends Goal {
 
 	@Inject(method = "start", at = @At("TAIL"))
 	private void attackStart(CallbackInfo ci) {
-		if (TEPConfig.creeper_doesnt_stop == true)
+		if (TEPConfig.creeper_doesnt_stop == true && target != null)
 			this.creeper.getNavigation().startMovingTo(target, 1.0D);
 	}
 
