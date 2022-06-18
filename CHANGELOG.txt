@@ -1,3 +1,4 @@
-v.1.0.6
+v.1.0.7
 
-- Fixes Skeletons Burn in Sunlight config
+- Fixes Skeletons suffocating in walls. 
+- Fixes Crash with Creeper clicking with flint and steel or with firing sword.

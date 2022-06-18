@@ -12,6 +12,7 @@ import net.minecraft.entity.EntityType;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.ai.goal.ActiveTargetGoal;
 import net.minecraft.entity.ai.goal.BreakDoorGoal;
+import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.mob.AbstractSkeletonEntity;
 import net.minecraft.entity.mob.HostileEntity;
 import net.minecraft.entity.passive.MerchantEntity;
@@ -60,5 +61,10 @@ public abstract class SkeletonMixin extends HostileEntity {
 				this.enchantEquipment(random, f * TEPConfig.skeletons_enchanted_more, equipmentSlot);
 			}
 		}
+	}
+
+	@Override
+	public boolean damage(DamageSource source, float amount) {
+		return source == DamageSource.IN_WALL ? false : super.damage(source, amount);
 	}
 }
