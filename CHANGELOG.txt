@@ -1,4 +1,3 @@
-v.1.0.7
+v.1.0.8
 
-- Fixes Skeletons suffocating in walls. 
-- Fixes Crash with Creeper clicking with flint and steel or with firing sword.
+- Fixes fabric.mod.json
