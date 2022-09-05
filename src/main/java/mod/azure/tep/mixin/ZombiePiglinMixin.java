@@ -21,7 +21,6 @@ public abstract class ZombiePiglinMixin extends HostileEntity {
 		super(entityType, world);
 	}
 
-	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@Inject(method = "initCustomGoals", at = @At("HEAD"))
 	private void attackGoals(CallbackInfo ci) {
 		if (TEPConfig.zombiepiglin_onsight == true)

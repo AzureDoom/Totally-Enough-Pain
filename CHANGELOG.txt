@@ -1,3 +1,3 @@
-v.1.0.8
+v.1.0.9
 
-- Fixes fabric.mod.json
+- Cleans up code

@@ -20,7 +20,6 @@ public abstract class SlimeMixin extends MobEntity {
 		super(entityType, world);
 	}
 
-	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@Inject(method = "initGoals", at = @At("HEAD"))
 	private void attackGoals(CallbackInfo ci) {
 		if (TEPConfig.slimes_attacks_villagers == true)

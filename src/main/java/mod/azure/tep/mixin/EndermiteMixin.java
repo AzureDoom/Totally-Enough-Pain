@@ -20,7 +20,6 @@ public abstract class EndermiteMixin extends HostileEntity {
 		super(entityType, world);
 	}
 
-	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@Inject(method = "initGoals", at = @At("HEAD"))
 	private void attackGoals(CallbackInfo ci) {
 		if (TEPConfig.endermite_attacks_villagers == true)
