@@ -21,7 +21,6 @@ public abstract class BlazeMixin extends HostileEntity {
 		super(entityType, world);
 	}
 
-	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@Inject(method = "initGoals", at = @At("HEAD"))
 	private void attackGoals(CallbackInfo ci) {
 		if (TEPConfig.blaze_attacks_villagers == true)

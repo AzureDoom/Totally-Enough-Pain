@@ -41,7 +41,6 @@ public abstract class SkeletonMixin extends HostileEntity {
 		super.setOnFireFor(TEPConfig.skeletons_dont_burn == true ? 0 : seconds);
 	}
 
-	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@Inject(method = "initGoals", at = @At("HEAD"))
 	private void attackGoals(CallbackInfo ci) {
 		this.targetSelector.add(1, new BreakDoorGoal(this, DOOR_BREAK_DIFFICULTY_CHECKER));

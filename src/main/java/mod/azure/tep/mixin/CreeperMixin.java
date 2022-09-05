@@ -52,7 +52,6 @@ public abstract class CreeperMixin extends HostileEntity {
 			this.dataTracker.set(CHARGED, true);
 	}
 
-	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@Inject(method = "initGoals", at = @At("HEAD"))
 	private void attackGoals(CallbackInfo ci) {
 		if (TEPConfig.creeper_attacks_irongolems == true)

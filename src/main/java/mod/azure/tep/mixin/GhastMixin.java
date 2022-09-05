@@ -20,7 +20,6 @@ public abstract class GhastMixin extends FlyingEntity {
 		super(entityType, world);
 	}
 
-	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@Inject(method = "initGoals", at = @At("HEAD"))
 	private void attackGoals(CallbackInfo ci) {
 		if (TEPConfig.ghast_attacks_villagers == true)
