@@ -6,23 +6,23 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import mod.azure.tep.config.TEPConfig;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.ai.goal.ActiveTargetGoal;
-import net.minecraft.entity.mob.HostileEntity;
-import net.minecraft.entity.mob.VexEntity;
-import net.minecraft.entity.passive.MerchantEntity;
-import net.minecraft.world.World;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
+import net.minecraft.world.entity.monster.Monster;
+import net.minecraft.world.entity.monster.Vex;
+import net.minecraft.world.entity.npc.AbstractVillager;
+import net.minecraft.world.level.Level;
 
-@Mixin(VexEntity.class)
-public abstract class VexMixin extends HostileEntity {
+@Mixin(Vex.class)
+public abstract class VexMixin extends Monster {
 
-	protected VexMixin(EntityType<? extends HostileEntity> entityType, World world) {
+	protected VexMixin(EntityType<? extends Monster> entityType, Level world) {
 		super(entityType, world);
 	}
 
-	@Inject(method = "initGoals", at = @At("HEAD"))
+	@Inject(method = "registerGoals", at = @At("HEAD"))
 	private void attackGoals(CallbackInfo ci) {
 		if (TEPConfig.vex_attacks_villagers == true)
-			this.targetSelector.add(1, new ActiveTargetGoal(this, MerchantEntity.class, false));
+			this.targetSelector.addGoal(1, new NearestAttackableTargetGoal(this, AbstractVillager.class, false));
 	}
 }

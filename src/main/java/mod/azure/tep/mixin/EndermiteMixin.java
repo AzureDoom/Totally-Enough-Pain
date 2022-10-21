@@ -6,23 +6,23 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import mod.azure.tep.config.TEPConfig;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.ai.goal.ActiveTargetGoal;
-import net.minecraft.entity.mob.EndermiteEntity;
-import net.minecraft.entity.mob.HostileEntity;
-import net.minecraft.entity.passive.MerchantEntity;
-import net.minecraft.world.World;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
+import net.minecraft.world.entity.monster.Endermite;
+import net.minecraft.world.entity.monster.Monster;
+import net.minecraft.world.entity.npc.AbstractVillager;
+import net.minecraft.world.level.Level;
 
-@Mixin(EndermiteEntity.class)
-public abstract class EndermiteMixin extends HostileEntity {
+@Mixin(Endermite.class)
+public abstract class EndermiteMixin extends Monster {
 
-	protected EndermiteMixin(EntityType<? extends HostileEntity> entityType, World world) {
+	protected EndermiteMixin(EntityType<? extends Monster> entityType, Level world) {
 		super(entityType, world);
 	}
 
-	@Inject(method = "initGoals", at = @At("HEAD"))
+	@Inject(method = "registerGoals", at = @At("HEAD"))
 	private void attackGoals(CallbackInfo ci) {
 		if (TEPConfig.endermite_attacks_villagers == true)
-			this.targetSelector.add(1, new ActiveTargetGoal(this, MerchantEntity.class, false));
+			this.targetSelector.addGoal(1, new NearestAttackableTargetGoal(this, AbstractVillager.class, false));
 	}
 }

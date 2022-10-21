@@ -6,27 +6,27 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import mod.azure.tep.config.TEPConfig;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.ai.goal.ActiveTargetGoal;
-import net.minecraft.entity.mob.HostileEntity;
-import net.minecraft.entity.mob.ZombifiedPiglinEntity;
-import net.minecraft.entity.passive.MerchantEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.world.World;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
+import net.minecraft.world.entity.monster.Monster;
+import net.minecraft.world.entity.monster.ZombifiedPiglin;
+import net.minecraft.world.entity.npc.AbstractVillager;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.Level;
 
-@Mixin(ZombifiedPiglinEntity.class)
-public abstract class ZombiePiglinMixin extends HostileEntity {
+@Mixin(ZombifiedPiglin.class)
+public abstract class ZombiePiglinMixin extends Monster {
 
-	protected ZombiePiglinMixin(EntityType<? extends HostileEntity> entityType, World world) {
+	protected ZombiePiglinMixin(EntityType<? extends Monster> entityType, Level world) {
 		super(entityType, world);
 	}
 
-	@Inject(method = "initCustomGoals", at = @At("HEAD"))
+	@Inject(method = "addBehaviourGoals", at = @At("HEAD"))
 	private void attackGoals(CallbackInfo ci) {
 		if (TEPConfig.zombiepiglin_onsight == true)
-			this.targetSelector.add(1, new ActiveTargetGoal(this, PlayerEntity.class, false));
+			this.targetSelector.addGoal(1, new NearestAttackableTargetGoal(this, Player.class, false));
 		if (TEPConfig.zombiepiglin_attacks_villagers == true)
-			this.targetSelector.add(1, new ActiveTargetGoal(this, MerchantEntity.class, false));
+			this.targetSelector.addGoal(1, new NearestAttackableTargetGoal(this, AbstractVillager.class, false));
 	}
 
 }

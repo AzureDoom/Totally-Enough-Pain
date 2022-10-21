@@ -6,23 +6,23 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import mod.azure.tep.config.TEPConfig;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.ai.goal.ActiveTargetGoal;
-import net.minecraft.entity.mob.FlyingEntity;
-import net.minecraft.entity.mob.GhastEntity;
-import net.minecraft.entity.passive.MerchantEntity;
-import net.minecraft.world.World;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.FlyingMob;
+import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
+import net.minecraft.world.entity.monster.Ghast;
+import net.minecraft.world.entity.npc.AbstractVillager;
+import net.minecraft.world.level.Level;
 
-@Mixin(GhastEntity.class)
-public abstract class GhastMixin extends FlyingEntity {
+@Mixin(Ghast.class)
+public abstract class GhastMixin extends FlyingMob {
 
-	protected GhastMixin(EntityType<? extends FlyingEntity> entityType, World world) {
+	protected GhastMixin(EntityType<? extends FlyingMob> entityType, Level world) {
 		super(entityType, world);
 	}
 
-	@Inject(method = "initGoals", at = @At("HEAD"))
+	@Inject(method = "registerGoals", at = @At("HEAD"))
 	private void attackGoals(CallbackInfo ci) {
 		if (TEPConfig.ghast_attacks_villagers == true)
-			this.targetSelector.add(1, new ActiveTargetGoal(this, MerchantEntity.class, false));
+			this.targetSelector.addGoal(1, new NearestAttackableTargetGoal(this, AbstractVillager.class, false));
 	}
 }

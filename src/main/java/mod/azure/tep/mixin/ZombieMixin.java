@@ -13,49 +13,42 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import mod.azure.tep.config.TEPConfig;
-import net.minecraft.entity.EntityData;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.EquipmentSlot;
-import net.minecraft.entity.SpawnReason;
-import net.minecraft.entity.ai.goal.BreakDoorGoal;
-import net.minecraft.entity.attribute.EntityAttributeInstance;
-import net.minecraft.entity.attribute.EntityAttributeModifier;
-import net.minecraft.entity.attribute.EntityAttributes;
-import net.minecraft.entity.mob.HostileEntity;
-import net.minecraft.entity.mob.ZombieEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.util.math.random.Random;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.Difficulty;
-import net.minecraft.world.LocalDifficulty;
-import net.minecraft.world.ServerWorldAccess;
-import net.minecraft.world.World;
+import net.minecraft.world.DifficultyInstance;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.MobSpawnType;
+import net.minecraft.world.entity.SpawnGroupData;
+import net.minecraft.world.entity.ai.attributes.AttributeInstance;
+import net.minecraft.world.entity.ai.attributes.AttributeModifier;
+import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.ai.goal.BreakDoorGoal;
+import net.minecraft.world.entity.monster.Monster;
+import net.minecraft.world.entity.monster.Zombie;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.ServerLevelAccessor;
 
-@Mixin(ZombieEntity.class)
-public abstract class ZombieMixin extends HostileEntity {
+@Mixin(Zombie.class)
+public abstract class ZombieMixin extends Monster {
 
-	EntityAttributeInstance entityAttributeInstance = this
-			.getAttributeInstance(EntityAttributes.GENERIC_MOVEMENT_SPEED);
+	AttributeInstance entityAttributeInstance = this.getAttribute(Attributes.MOVEMENT_SPEED);
 
-	private static final Predicate<Difficulty> DOOR_BREAK_DIFFICULTY_CHECKER = (difficulty) -> {
+	private static final Predicate<Difficulty> DOOR_BREAKING_PREDICATE = (difficulty) -> {
 		return difficulty == Difficulty.HARD || difficulty == Difficulty.EASY || difficulty == Difficulty.NORMAL;
 	};
 
-	protected ZombieMixin(EntityType<? extends HostileEntity> entityType, World world) {
+	protected ZombieMixin(EntityType<? extends Monster> entityType, Level world) {
 		super(entityType, world);
 	}
 
-	@Inject(at = @At("RETURN"), method = "burnsInDaylight", cancellable = true)
+	@Inject(at = @At("RETURN"), method = "isSunSensitive", cancellable = true)
 	private void noBurny(CallbackInfoReturnable<Boolean> cir) {
 		if (TEPConfig.zombies_dont_burn == true)
 			cir.setReturnValue(false);
-	}
-
-	@Inject(method = "initialize", at = @At("HEAD"), cancellable = true)
-	private void spiderJockeys(ServerWorldAccess world, LocalDifficulty difficulty, SpawnReason spawnReason,
-			@Nullable EntityData entityData, @Nullable NbtCompound entityNbt, CallbackInfoReturnable<EntityData> cir) {
-		this.setCanBreakDoors(true);
 	}
 
 	@Overwrite
@@ -65,49 +58,51 @@ public abstract class ZombieMixin extends HostileEntity {
 
 	@Overwrite
 	public void setCanBreakDoors(boolean canBreakDoors) {
-		this.goalSelector.add(1, new BreakDoorGoal(this, DOOR_BREAK_DIFFICULTY_CHECKER));
+		this.goalSelector.addGoal(1, new BreakDoorGoal(this, DOOR_BREAKING_PREDICATE));
 	}
 
-	@Inject(method = "initialize", at = @At("HEAD"))
-	private void enchantedArmor(ServerWorldAccess world, LocalDifficulty difficulty, SpawnReason spawnReason,
-			@Nullable EntityData entityData, @Nullable NbtCompound entityNbt, CallbackInfoReturnable<EntityData> ci) {
-		this.updateEnchantments(difficulty);
+	@Inject(method = "finalizeSpawn", at = @At("HEAD"))
+	private void enchantedArmor(ServerLevelAccessor world, DifficultyInstance difficulty, MobSpawnType spawnReason,
+			@Nullable SpawnGroupData entityData, @Nullable CompoundTag entityNbt,
+			CallbackInfoReturnable<SpawnGroupData> ci) {
+		this.populateDefaultEquipmentEnchantments(difficulty);
 		SplittableRandom random = new SplittableRandom();
 		int r = random.nextInt(0, 10);
 		if (TEPConfig.zombies_runners == true) {
 			if (r <= 3) {
-				entityAttributeInstance.addTemporaryModifier(
-						new EntityAttributeModifier(UUID.fromString("2cd5b1d6-6ce6-44ab-ac3b-1d0aecd1d0cd"),
-								"Speed boost", 0.5D, EntityAttributeModifier.Operation.MULTIPLY_BASE));
+				entityAttributeInstance.addTransientModifier(
+						new AttributeModifier(UUID.fromString("2cd5b1d6-6ce6-44ab-ac3b-1d0aecd1d0cd"), "Speed boost",
+								0.5D, AttributeModifier.Operation.MULTIPLY_BASE));
 			}
 		}
+		this.setCanBreakDoors(true);
 	}
 
-	@Inject(method = "initEquipment", at = @At("HEAD"))
-	private void moreEquipment(Random random, LocalDifficulty difficulty, CallbackInfo ci) {
+	@Inject(method = "populateDefaultEquipmentSlots", at = @At("HEAD"))
+	private void moreEquipment(RandomSource random, DifficultyInstance difficulty, CallbackInfo ci) {
 		if (TEPConfig.zombies_better_gear == true) {
 			int i = this.random.nextInt(3);
 			if (i == 0) {
-				this.equipStack(EquipmentSlot.MAINHAND, new ItemStack(this.world.getDifficulty() == Difficulty.HARD
+				this.setItemSlot(EquipmentSlot.MAINHAND, new ItemStack(this.level.getDifficulty() == Difficulty.HARD
 						? Items.DIAMOND_SWORD
-						: this.world.getDifficulty() == Difficulty.EASY ? Items.GOLDEN_SWORD : Items.IRON_SWORD));
+						: this.level.getDifficulty() == Difficulty.EASY ? Items.GOLDEN_SWORD : Items.IRON_SWORD));
 			} else {
-				this.equipStack(EquipmentSlot.MAINHAND, new ItemStack(this.world.getDifficulty() == Difficulty.HARD
+				this.setItemSlot(EquipmentSlot.MAINHAND, new ItemStack(this.level.getDifficulty() == Difficulty.HARD
 						? Items.DIAMOND_SHOVEL
-						: this.world.getDifficulty() == Difficulty.EASY ? Items.GOLDEN_SHOVEL : Items.IRON_SHOVEL));
+						: this.level.getDifficulty() == Difficulty.EASY ? Items.GOLDEN_SHOVEL : Items.IRON_SHOVEL));
 			}
 		}
 	}
 
-	protected void updateEnchantments(LocalDifficulty difficulty) {
-		float f = difficulty.getClampedLocalDifficulty();
-		this.enchantMainHandItem(random, f * TEPConfig.zombies_enchanted_more);
+	protected void populateDefaultEquipmentEnchantments(DifficultyInstance difficulty) {
+		float f = difficulty.getSpecialMultiplier();
+		this.enchantSpawnedWeapon(random, f * TEPConfig.zombies_enchanted_more);
 		EquipmentSlot[] var3 = EquipmentSlot.values();
 		int var4 = var3.length;
 		for (int var5 = 0; var5 < var4; ++var5) {
 			EquipmentSlot equipmentSlot = var3[var5];
 			if (equipmentSlot.getType() == EquipmentSlot.Type.ARMOR) {
-				this.enchantEquipment(random, f * TEPConfig.zombies_enchanted_more, equipmentSlot);
+				this.enchantSpawnedArmor(random, f * TEPConfig.zombies_enchanted_more, equipmentSlot);
 			}
 		}
 	}

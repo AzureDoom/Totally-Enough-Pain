@@ -8,26 +8,26 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import mod.azure.tep.config.TEPConfig;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.EquipmentSlot;
-import net.minecraft.entity.ai.goal.ActiveTargetGoal;
-import net.minecraft.entity.ai.goal.BreakDoorGoal;
-import net.minecraft.entity.damage.DamageSource;
-import net.minecraft.entity.mob.AbstractSkeletonEntity;
-import net.minecraft.entity.mob.HostileEntity;
-import net.minecraft.entity.passive.MerchantEntity;
 import net.minecraft.world.Difficulty;
-import net.minecraft.world.LocalDifficulty;
-import net.minecraft.world.World;
+import net.minecraft.world.DifficultyInstance;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.ai.goal.BreakDoorGoal;
+import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
+import net.minecraft.world.entity.monster.AbstractSkeleton;
+import net.minecraft.world.entity.monster.Monster;
+import net.minecraft.world.entity.npc.AbstractVillager;
+import net.minecraft.world.level.Level;
 
-@Mixin(AbstractSkeletonEntity.class)
-public abstract class SkeletonMixin extends HostileEntity {
+@Mixin(AbstractSkeleton.class)
+public abstract class SkeletonMixin extends Monster {
 
 	private static final Predicate<Difficulty> DOOR_BREAK_DIFFICULTY_CHECKER = (difficulty) -> {
 		return difficulty == Difficulty.HARD || difficulty == Difficulty.EASY || difficulty == Difficulty.NORMAL;
 	};
 
-	protected SkeletonMixin(EntityType<? extends HostileEntity> entityType, World world) {
+	protected SkeletonMixin(EntityType<? extends Monster> entityType, Level world) {
 		super(entityType, world);
 	}
 
@@ -37,33 +37,33 @@ public abstract class SkeletonMixin extends HostileEntity {
 	}
 
 	@Override
-	public void setOnFireFor(int seconds) {
-		super.setOnFireFor(TEPConfig.skeletons_dont_burn == true ? 0 : seconds);
+	public void setSecondsOnFire(int seconds) {
+		super.setSecondsOnFire(TEPConfig.skeletons_dont_burn == true ? 0 : seconds);
 	}
 
-	@Inject(method = "initGoals", at = @At("HEAD"))
+	@Inject(method = "registerGoals", at = @At("HEAD"))
 	private void attackGoals(CallbackInfo ci) {
-		this.targetSelector.add(1, new BreakDoorGoal(this, DOOR_BREAK_DIFFICULTY_CHECKER));
+		this.targetSelector.addGoal(1, new BreakDoorGoal(this, DOOR_BREAK_DIFFICULTY_CHECKER));
 		if (TEPConfig.skeletons_attacks_villagers == true)
-			this.targetSelector.add(1, new ActiveTargetGoal(this, MerchantEntity.class, false));
+			this.targetSelector.addGoal(1, new NearestAttackableTargetGoal(this, AbstractVillager.class, false));
 	}
 
-	protected void updateEnchantments(LocalDifficulty difficulty) {
-		float f = difficulty.getClampedLocalDifficulty();
-		this.enchantMainHandItem(random, f * TEPConfig.skeletons_enchanted_more);
+	protected void populateDefaultEquipmentEnchantments(DifficultyInstance difficulty) {
+		float f = difficulty.getSpecialMultiplier();
+		this.enchantSpawnedWeapon(random, f * TEPConfig.skeletons_enchanted_more);
 		EquipmentSlot[] var3 = EquipmentSlot.values();
 		int var4 = var3.length;
 
 		for (int var5 = 0; var5 < var4; ++var5) {
 			EquipmentSlot equipmentSlot = var3[var5];
 			if (equipmentSlot.getType() == EquipmentSlot.Type.ARMOR) {
-				this.enchantEquipment(random, f * TEPConfig.skeletons_enchanted_more, equipmentSlot);
+				this.enchantSpawnedArmor(random, f * TEPConfig.skeletons_enchanted_more, equipmentSlot);
 			}
 		}
 	}
 
 	@Override
-	public boolean damage(DamageSource source, float amount) {
-		return source == DamageSource.IN_WALL ? false : super.damage(source, amount);
+	public boolean hurt(DamageSource source, float amount) {
+		return source == DamageSource.IN_WALL ? false : super.hurt(source, amount);
 	}
 }

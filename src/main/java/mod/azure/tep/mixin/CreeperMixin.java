@@ -9,37 +9,37 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import mod.azure.tep.config.TEPConfig;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.ai.goal.ActiveTargetGoal;
-import net.minecraft.entity.ai.goal.BreakDoorGoal;
-import net.minecraft.entity.data.DataTracker;
-import net.minecraft.entity.data.TrackedData;
-import net.minecraft.entity.data.TrackedDataHandlerRegistry;
-import net.minecraft.entity.mob.CreeperEntity;
-import net.minecraft.entity.mob.HostileEntity;
-import net.minecraft.entity.passive.IronGolemEntity;
-import net.minecraft.entity.passive.MerchantEntity;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.core.BlockPos;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.world.Difficulty;
-import net.minecraft.world.World;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.ai.goal.BreakDoorGoal;
+import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
+import net.minecraft.world.entity.animal.IronGolem;
+import net.minecraft.world.entity.monster.Creeper;
+import net.minecraft.world.entity.monster.Monster;
+import net.minecraft.world.entity.npc.AbstractVillager;
+import net.minecraft.world.level.Level;
 
-@Mixin(CreeperEntity.class)
-public abstract class CreeperMixin extends HostileEntity {
+@Mixin(Creeper.class)
+public abstract class CreeperMixin extends Monster {
 
 	@Shadow
 	private int explosionRadius = TEPConfig.creeper_power;
 
-	protected CreeperMixin(EntityType<? extends HostileEntity> entityType, World world) {
+	protected CreeperMixin(EntityType<? extends Monster> entityType, Level world) {
 		super(entityType, world);
 	}
 
 	@Shadow
-	private static final TrackedData<Boolean> CHARGED = DataTracker.registerData(CreeperEntity.class,
-			TrackedDataHandlerRegistry.BOOLEAN);
+	private static final EntityDataAccessor<Boolean> DATA_IS_POWERED = SynchedEntityData.defineId(Creeper.class,
+			EntityDataSerializers.BOOLEAN);
 
 	@Shadow
-	private static final TrackedData<Integer> FUSE_SPEED = DataTracker.registerData(CreeperEntity.class,
-			TrackedDataHandlerRegistry.INTEGER);
+	private static final EntityDataAccessor<Integer> DATA_SWELL_DIR = SynchedEntityData.defineId(Creeper.class,
+			EntityDataSerializers.INT);
 
 	private static final Predicate<Difficulty> DOOR_BREAK_DIFFICULTY_CHECKER = (difficulty) -> {
 		return difficulty == Difficulty.HARD || difficulty == Difficulty.EASY || difficulty == Difficulty.NORMAL;
@@ -49,15 +49,15 @@ public abstract class CreeperMixin extends HostileEntity {
 	@Inject(method = "tick", at = @At("HEAD"))
 	private void superCharged(CallbackInfo ci) {
 		if (TEPConfig.creeper_always_charged == true)
-			this.dataTracker.set(CHARGED, true);
+			this.entityData.set(DATA_IS_POWERED, true);
 	}
 
-	@Inject(method = "initGoals", at = @At("HEAD"))
+	@Inject(method = "registerGoals", at = @At("HEAD"))
 	private void attackGoals(CallbackInfo ci) {
 		if (TEPConfig.creeper_attacks_irongolems == true)
-			this.targetSelector.add(1, new ActiveTargetGoal(this, IronGolemEntity.class, false));
+			this.targetSelector.addGoal(1, new NearestAttackableTargetGoal(this, IronGolem.class, false));
 		if (TEPConfig.creeper_attacks_villagers == true)
-			this.targetSelector.add(1, new ActiveTargetGoal(this, MerchantEntity.class, false));
-		this.targetSelector.add(1, new BreakDoorGoal(this, DOOR_BREAK_DIFFICULTY_CHECKER));
+			this.targetSelector.addGoal(1, new NearestAttackableTargetGoal(this, AbstractVillager.class, false));
+		this.targetSelector.addGoal(1, new BreakDoorGoal(this, DOOR_BREAK_DIFFICULTY_CHECKER));
 	}
 }

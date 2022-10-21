@@ -7,35 +7,35 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import mod.azure.tep.config.TEPConfig;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.ai.goal.CreeperIgniteGoal;
-import net.minecraft.entity.ai.goal.Goal;
-import net.minecraft.entity.mob.CreeperEntity;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.ai.goal.Goal;
+import net.minecraft.world.entity.ai.goal.SwellGoal;
+import net.minecraft.world.entity.monster.Creeper;
 
-@Mixin(CreeperIgniteGoal.class)
+@Mixin(SwellGoal.class)
 public abstract class CreeperExplodeMixin extends Goal {
 
 	@Shadow
-	private final CreeperEntity creeper;
+	private final Creeper creeper;
 
 	@Shadow
 	private LivingEntity target;
 
-	public CreeperExplodeMixin(CreeperEntity creeper) {
+	public CreeperExplodeMixin(Creeper creeper) {
 		this.creeper = creeper;
 	}
 
 	@Inject(method = "start", at = @At("TAIL"))
 	private void attackStart(CallbackInfo ci) {
 		if (TEPConfig.creeper_doesnt_stop == true && target != null)
-			this.creeper.getNavigation().startMovingTo(target, 1.0D);
+			this.creeper.getNavigation().moveTo(target, 1.0D);
 	}
 
 	@Inject(method = "tick", at = @At("TAIL"))
 	private void tickStart(CallbackInfo ci) {
-		if (TEPConfig.creeper_blowsup_door == true && this.creeper.getVisibilityCache().canSee(this.target)
-				&& this.creeper.squaredDistanceTo(this.target) <= 3.0D) {
-			this.creeper.setFuseSpeed(-1);
+		if (TEPConfig.creeper_blowsup_door == true && this.creeper.getSensing().hasLineOfSight(this.target)
+				&& this.creeper.distanceToSqr(this.target) <= 3.0D) {
+			this.creeper.setSwellDir(-1);
 		}
 	}
 }

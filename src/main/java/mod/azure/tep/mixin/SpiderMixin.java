@@ -8,42 +8,43 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import mod.azure.tep.config.TEPConfig;
-import net.minecraft.entity.EntityData;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.SpawnReason;
-import net.minecraft.entity.ai.goal.ActiveTargetGoal;
-import net.minecraft.entity.mob.HostileEntity;
-import net.minecraft.entity.mob.SkeletonEntity;
-import net.minecraft.entity.mob.SpiderEntity;
-import net.minecraft.entity.passive.MerchantEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.world.LocalDifficulty;
-import net.minecraft.world.ServerWorldAccess;
-import net.minecraft.world.World;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.DifficultyInstance;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.MobSpawnType;
+import net.minecraft.world.entity.SpawnGroupData;
+import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
+import net.minecraft.world.entity.monster.Monster;
+import net.minecraft.world.entity.monster.Skeleton;
+import net.minecraft.world.entity.monster.Spider;
+import net.minecraft.world.entity.npc.AbstractVillager;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.ServerLevelAccessor;
 
-@Mixin(SpiderEntity.class)
-public abstract class SpiderMixin extends HostileEntity {
+@Mixin(Spider.class)
+public abstract class SpiderMixin extends Monster {
 
-	protected SpiderMixin(EntityType<? extends HostileEntity> entityType, World world) {
+	protected SpiderMixin(EntityType<? extends Monster> entityType, Level world) {
 		super(entityType, world);
 	}
 
-	@Inject(method = "initGoals", at = @At("HEAD"))
+	@Inject(method = "registerGoals", at = @At("HEAD"))
 	private void attackGoals(CallbackInfo ci) {
 		if (TEPConfig.spider_always_attack == true)
-			this.targetSelector.add(1, new ActiveTargetGoal(this, PlayerEntity.class, false));
+			this.targetSelector.addGoal(1, new NearestAttackableTargetGoal(this, Player.class, false));
 		if (TEPConfig.spider_attacks_villagers == true)
-			this.targetSelector.add(1, new ActiveTargetGoal(this, MerchantEntity.class, false));
+			this.targetSelector.addGoal(1, new NearestAttackableTargetGoal(this, AbstractVillager.class, false));
 	}
 
-	@Inject(method = "initialize", at = @At("HEAD"), cancellable = true)
-	private void spiderJockeys(ServerWorldAccess world, LocalDifficulty difficulty, SpawnReason spawnReason,
-			@Nullable EntityData entityData, @Nullable NbtCompound entityNbt, CallbackInfoReturnable<EntityData> cir) {
+	@Inject(method = "finalizeSpawn", at = @At("HEAD"), cancellable = true)
+	private void spiderJockeys(ServerLevelAccessor world, DifficultyInstance difficulty, MobSpawnType spawnReason,
+			@Nullable SpawnGroupData entityData, @Nullable CompoundTag entityNbt,
+			CallbackInfoReturnable<SpawnGroupData> cir) {
 		if (TEPConfig.spider_always_jockeys == true || world.getRandom().nextInt(100) == 0) {
-			SkeletonEntity skeletonEntity = (SkeletonEntity) EntityType.SKELETON.create(this.world);
-			skeletonEntity.refreshPositionAndAngles(this.getX(), this.getY(), this.getZ(), this.getYaw(), 0.0F);
-			skeletonEntity.initialize(world, difficulty, spawnReason, (EntityData) null, (NbtCompound) null);
+			Skeleton skeletonEntity = (Skeleton) EntityType.SKELETON.create(this.level);
+			skeletonEntity.moveTo(this.getX(), this.getY(), this.getZ(), this.getYRot(), 0.0F);
+			skeletonEntity.finalizeSpawn(world, difficulty, spawnReason, (SpawnGroupData) null, null);
 			skeletonEntity.startRiding(this);
 		}
 	}

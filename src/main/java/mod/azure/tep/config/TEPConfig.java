@@ -3,6 +3,11 @@ package mod.azure.tep.config;
 public class TEPConfig extends CustomMidnightConfig {
 
 	@Entry
+	public static boolean monsters_can_warden_sense = true;
+	@Entry
+	public static int monster_sensing_range = 32;
+	
+	@Entry
 	public static boolean creeper_doesnt_stop = true;
 	@Entry
 	public static boolean creeper_always_charged = true;
