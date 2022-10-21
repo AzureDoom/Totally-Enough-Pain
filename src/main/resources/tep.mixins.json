@@ -12,6 +12,7 @@
 		"FireBallMixin",
 		"GhastMixin",
 		"MagmaMixin",
+		"MonsterMixin",
 		"PhantomSpawningMixin",
 		"ShulkerMixin",
 		"SkeletonMixin",
