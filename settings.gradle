@@ -1,10 +1,8 @@
 pluginManagement {
     repositories {
-        maven {
-            name = 'Fabric'
-            url = 'https://maven.fabricmc.net/'
-        }
         gradlePluginPortal()
+        maven { url = 'https://maven.minecraftforge.net/' }
+        maven { url = 'https://maven.parchmentmc.org' }
     }
 }
-rootProject.name = 'tep-1.19'
+rootProject.name = 'tep-forge-1.19'

@@ -23,13 +23,13 @@ public abstract class BlazeMixin extends Monster {
 
 	@Inject(method = "registerGoals", at = @At("HEAD"))
 	private void attackGoals(CallbackInfo ci) {
-		if (TEPConfig.blaze_attacks_villagers == true)
+		if (TEPConfig.SERVER.blaze_attacks_villagers.get() == true)
 			this.targetSelector.addGoal(1, new NearestAttackableTargetGoal(this, AbstractVillager.class, false));
 	}
 
 	@Inject(at = @At("RETURN"), method = "isOnFire", cancellable = true)
 	private void onFireYo(CallbackInfoReturnable<Boolean> cir) {
-		if (TEPConfig.blaze_always_onfire == true)
+		if (TEPConfig.SERVER.blaze_always_onfire.get() == true)
 			cir.setReturnValue(true);
 	}
 }

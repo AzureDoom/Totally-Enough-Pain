@@ -19,12 +19,12 @@ public class MagmaMixin extends Mob {
 	}
 
 	public boolean doesRenderOnFire() {
-		return TEPConfig.magma_render_onfire == false ? false : super.isOnFire();
+		return TEPConfig.SERVER.magma_render_onfire.get() == false ? false : super.isOnFire();
 	}
 
 	@Inject(at = @At("RETURN"), method = "isOnFire", cancellable = true)
 	private void onFireYo(CallbackInfoReturnable<Boolean> cir) {
-		if (TEPConfig.magma_onfire == true)
+		if (TEPConfig.SERVER.magma_onfire.get() == true)
 			cir.setReturnValue(true);
 	}
 

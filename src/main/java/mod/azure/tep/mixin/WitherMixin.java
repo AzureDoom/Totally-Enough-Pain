@@ -22,7 +22,7 @@ public abstract class WitherMixin extends Monster {
 
 	@Inject(method = "registerGoals", at = @At("HEAD"))
 	private void attackGoals(CallbackInfo ci) {
-		if (TEPConfig.wither_attacks_villagers == true)
+		if (TEPConfig.SERVER.wither_attacks_villagers.get()  == true)
 			this.targetSelector.addGoal(1, new NearestAttackableTargetGoal(this, AbstractVillager.class, false));
 	}
 }

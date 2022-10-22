@@ -47,7 +47,7 @@ public abstract class ZombieMixin extends Monster {
 
 	@Inject(at = @At("RETURN"), method = "isSunSensitive", cancellable = true)
 	private void noBurny(CallbackInfoReturnable<Boolean> cir) {
-		if (TEPConfig.zombies_dont_burn == true)
+		if (TEPConfig.SERVER.zombies_dont_burn.get() == true)
 			cir.setReturnValue(false);
 	}
 
@@ -68,7 +68,7 @@ public abstract class ZombieMixin extends Monster {
 		this.populateDefaultEquipmentEnchantments(difficulty);
 		SplittableRandom random = new SplittableRandom();
 		int r = random.nextInt(0, 10);
-		if (TEPConfig.zombies_runners == true) {
+		if (TEPConfig.SERVER.zombies_runners.get() == true) {
 			if (r <= 3) {
 				entityAttributeInstance.addTransientModifier(
 						new AttributeModifier(UUID.fromString("2cd5b1d6-6ce6-44ab-ac3b-1d0aecd1d0cd"), "Speed boost",
@@ -80,7 +80,7 @@ public abstract class ZombieMixin extends Monster {
 
 	@Inject(method = "populateDefaultEquipmentSlots", at = @At("HEAD"))
 	private void moreEquipment(RandomSource random, DifficultyInstance difficulty, CallbackInfo ci) {
-		if (TEPConfig.zombies_better_gear == true) {
+		if (TEPConfig.SERVER.zombies_better_gear.get() == true) {
 			int i = this.random.nextInt(3);
 			if (i == 0) {
 				this.setItemSlot(EquipmentSlot.MAINHAND, new ItemStack(this.level.getDifficulty() == Difficulty.HARD
@@ -96,13 +96,13 @@ public abstract class ZombieMixin extends Monster {
 
 	protected void populateDefaultEquipmentEnchantments(DifficultyInstance difficulty) {
 		float f = difficulty.getSpecialMultiplier();
-		this.enchantSpawnedWeapon(random, f * TEPConfig.zombies_enchanted_more);
+		this.enchantSpawnedWeapon(random, f * TEPConfig.SERVER.zombies_enchanted_more.get().floatValue());
 		EquipmentSlot[] var3 = EquipmentSlot.values();
 		int var4 = var3.length;
 		for (int var5 = 0; var5 < var4; ++var5) {
 			EquipmentSlot equipmentSlot = var3[var5];
 			if (equipmentSlot.getType() == EquipmentSlot.Type.ARMOR) {
-				this.enchantSpawnedArmor(random, f * TEPConfig.zombies_enchanted_more, equipmentSlot);
+				this.enchantSpawnedArmor(random, f * TEPConfig.SERVER.zombies_enchanted_more.get().floatValue(), equipmentSlot);
 			}
 		}
 	}

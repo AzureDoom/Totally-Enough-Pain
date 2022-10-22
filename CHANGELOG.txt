@@ -1,3 +1,4 @@
-v.1.0.9
+v.1.0.10
 
-- Cleans up code
+- Adds Config for Monsters to use Warden sensing AI.
+- Forge build

@@ -9,5 +9,5 @@ import net.minecraft.world.entity.projectile.LargeFireball;
 @Mixin(LargeFireball.class)
 public class FireBallMixin {
 	@Shadow
-	private int explosionPower = TEPConfig.ghast_fire_power;
+	private int explosionPower = TEPConfig.SERVER.ghast_fire_power.get();
 }

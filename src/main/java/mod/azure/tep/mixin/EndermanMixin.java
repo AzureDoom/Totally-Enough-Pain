@@ -23,9 +23,9 @@ public abstract class EndermanMixin extends Monster {
 
 	@Inject(method = "registerGoals", at = @At("HEAD"))
 	private void attackGoals(CallbackInfo ci) {
-		if (TEPConfig.enderman_always_attack == true)
+		if (TEPConfig.SERVER.enderman_always_attack.get() == true)
 			this.targetSelector.addGoal(1, new NearestAttackableTargetGoal(this, Player.class, false));
-		if (TEPConfig.enderman_attacks_villagers == true)
+		if (TEPConfig.SERVER.enderman_attacks_villagers.get() == true)
 			this.targetSelector.addGoal(1, new NearestAttackableTargetGoal(this, AbstractVillager.class, false));
 	}
 }

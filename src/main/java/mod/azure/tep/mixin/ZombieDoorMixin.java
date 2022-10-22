@@ -11,6 +11,6 @@ public class ZombieDoorMixin {
 
 	@Overwrite
 	public int getDoorBreakTime() {
-		return Math.max(TEPConfig.zombies_break_door, -1);
+		return Math.max(TEPConfig.SERVER.zombies_break_door.get(), -1);
 	}
 }

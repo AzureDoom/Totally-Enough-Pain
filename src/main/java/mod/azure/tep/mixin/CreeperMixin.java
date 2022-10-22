@@ -27,7 +27,7 @@ import net.minecraft.world.level.Level;
 public abstract class CreeperMixin extends Monster {
 
 	@Shadow
-	private int explosionRadius = TEPConfig.creeper_power;
+	private int explosionRadius = TEPConfig.SERVER.creeper_power.get();
 
 	protected CreeperMixin(EntityType<? extends Monster> entityType, Level world) {
 		super(entityType, world);
@@ -48,15 +48,15 @@ public abstract class CreeperMixin extends Monster {
 
 	@Inject(method = "tick", at = @At("HEAD"))
 	private void superCharged(CallbackInfo ci) {
-		if (TEPConfig.creeper_always_charged == true)
+		if (TEPConfig.SERVER.creeper_always_charged.get() == true)
 			this.entityData.set(DATA_IS_POWERED, true);
 	}
 
 	@Inject(method = "registerGoals", at = @At("HEAD"))
 	private void attackGoals(CallbackInfo ci) {
-		if (TEPConfig.creeper_attacks_irongolems == true)
+		if (TEPConfig.SERVER.creeper_attacks_irongolems.get() == true)
 			this.targetSelector.addGoal(1, new NearestAttackableTargetGoal(this, IronGolem.class, false));
-		if (TEPConfig.creeper_attacks_villagers == true)
+		if (TEPConfig.SERVER.creeper_attacks_villagers.get() == true)
 			this.targetSelector.addGoal(1, new NearestAttackableTargetGoal(this, AbstractVillager.class, false));
 		this.targetSelector.addGoal(1, new BreakDoorGoal(this, DOOR_BREAK_DIFFICULTY_CHECKER));
 	}

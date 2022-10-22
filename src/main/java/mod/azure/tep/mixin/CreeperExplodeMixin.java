@@ -27,13 +27,13 @@ public abstract class CreeperExplodeMixin extends Goal {
 
 	@Inject(method = "start", at = @At("TAIL"))
 	private void attackStart(CallbackInfo ci) {
-		if (TEPConfig.creeper_doesnt_stop == true && target != null)
+		if (TEPConfig.SERVER.creeper_doesnt_stop.get() == true && target != null)
 			this.creeper.getNavigation().moveTo(target, 1.0D);
 	}
 
 	@Inject(method = "tick", at = @At("TAIL"))
 	private void tickStart(CallbackInfo ci) {
-		if (TEPConfig.creeper_blowsup_door == true && this.creeper.getSensing().hasLineOfSight(this.target)
+		if (TEPConfig.SERVER.creeper_blowsup_door.get() == true && this.creeper.getSensing().hasLineOfSight(this.target)
 				&& this.creeper.distanceToSqr(this.target) <= 3.0D) {
 			this.creeper.setSwellDir(-1);
 		}

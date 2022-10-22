@@ -22,7 +22,7 @@ public abstract class EndermiteMixin extends Monster {
 
 	@Inject(method = "registerGoals", at = @At("HEAD"))
 	private void attackGoals(CallbackInfo ci) {
-		if (TEPConfig.endermite_attacks_villagers == true)
+		if (TEPConfig.SERVER.endermite_attacks_villagers.get() == true)
 			this.targetSelector.addGoal(1, new NearestAttackableTargetGoal(this, AbstractVillager.class, false));
 	}
 }

@@ -1,0 +1,26 @@
+modLoader="javafml" 
+loaderVersion="[43,)" 
+license="MIT"
+issueTrackerURL="https://github.com/AzureDoom/Totally-Enough-Pain/issues"
+[[mods]] 
+modId="tep" 
+version="${file.jarVersion}" 
+displayName="Totally Enough Pain" 
+displayURL="https://www.curseforge.com/minecraft/mc-mods/totally-enough-pain" 
+logoFile="icon.png" 
+authors="AzureDoom" 
+description='''
+Minecraft Hardcore mod
+'''
+[[dependencies.tep]]
+    modId="forge" 
+    mandatory=true 
+    versionRange="[43,)"
+    ordering="NONE"
+    side="BOTH"
+[[dependencies.tep]]
+    modId="minecraft"
+    mandatory=true
+    versionRange="[1.19.2,1.20)"
+    ordering="NONE"
+    side="BOTH"

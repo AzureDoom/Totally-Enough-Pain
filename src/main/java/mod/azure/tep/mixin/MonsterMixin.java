@@ -59,10 +59,10 @@ public abstract class MonsterMixin extends PathfinderMob implements VibrationLis
 
 	@Inject(at = @At("TAIL"), method = "<init>")
 	private void addShitz(EntityType<? extends PathfinderMob> entityType, Level level, CallbackInfo cir) {
-		if (TEPConfig.monsters_can_warden_sense == true)
+		if (TEPConfig.SERVER.monsters_can_warden_sense.get() == true)
 			this.dynamicGameEventListener = new DynamicGameEventListener<VibrationListener>(
 					new VibrationListener(new EntityPositionSource(this, this.getEyeHeight()),
-							TEPConfig.monster_sensing_range, this, null, 0.0f, 0));
+							TEPConfig.SERVER.monster_sensing_range.get(), this, null, 0.0f, 0));
 	}
 
 	public int getClientAngerLevel() {
@@ -105,14 +105,14 @@ public abstract class MonsterMixin extends PathfinderMob implements VibrationLis
 	@Override
 	public void defineSynchedData() {
 		super.defineSynchedData();
-		if (TEPConfig.monsters_can_warden_sense == true)
+		if (TEPConfig.SERVER.monsters_can_warden_sense.get() == true)
 			this.entityData.define(CLIENT_ANGER_LEVEL, 0);
 	}
 
 	@Override
 	public void addAdditionalSaveData(CompoundTag compound) {
 		super.addAdditionalSaveData(compound);
-		if (TEPConfig.monsters_can_warden_sense == true) {
+		if (TEPConfig.SERVER.monsters_can_warden_sense.get() == true) {
 			VibrationListener.codec(this).encodeStart(NbtOps.INSTANCE, this.dynamicGameEventListener.getListener())
 					.resultOrPartial(LOGGER::error).ifPresent(tag -> compound.put("listener", (Tag) tag));
 			AngerManagement.codec(this::canTargetEntity).encodeStart(NbtOps.INSTANCE, this.angerManagement)
@@ -123,7 +123,7 @@ public abstract class MonsterMixin extends PathfinderMob implements VibrationLis
 	@Override
 	public void readAdditionalSaveData(CompoundTag compound) {
 		super.readAdditionalSaveData(compound);
-		if (TEPConfig.monsters_can_warden_sense == true) {
+		if (TEPConfig.SERVER.monsters_can_warden_sense.get() == true) {
 			if (compound.contains("listener", 10)) {
 				VibrationListener.codec(this).parse(new Dynamic<>(NbtOps.INSTANCE, compound.getCompound("listener")))
 						.resultOrPartial(LOGGER::error).ifPresent(vibrationListener -> this.dynamicGameEventListener
@@ -146,7 +146,7 @@ public abstract class MonsterMixin extends PathfinderMob implements VibrationLis
 		Level level = this.level;
 		if (level instanceof ServerLevel) {
 			ServerLevel serverLevel = (ServerLevel) level;
-			if (TEPConfig.monsters_can_warden_sense == true)
+			if (TEPConfig.SERVER.monsters_can_warden_sense.get() == true)
 				this.dynamicGameEventListener.getListener().tick(serverLevel);
 		}
 	}
@@ -156,7 +156,7 @@ public abstract class MonsterMixin extends PathfinderMob implements VibrationLis
 		Level level = this.level;
 		if (level instanceof ServerLevel) {
 			ServerLevel serverLevel = (ServerLevel) level;
-			if (TEPConfig.monsters_can_warden_sense == true)
+			if (TEPConfig.SERVER.monsters_can_warden_sense.get() == true)
 				biConsumer.accept(this.dynamicGameEventListener, serverLevel);
 		}
 	}
@@ -215,7 +215,7 @@ public abstract class MonsterMixin extends PathfinderMob implements VibrationLis
 		if (this.isDeadOrDying()) {
 			return;
 		}
-		if (TEPConfig.monsters_can_warden_sense == true)
+		if (TEPConfig.SERVER.monsters_can_warden_sense.get() == true)
 			this.getNavigation().moveTo(var3.getX(), var3.getY(), var3.getZ(), 0.9F);
 	}
 

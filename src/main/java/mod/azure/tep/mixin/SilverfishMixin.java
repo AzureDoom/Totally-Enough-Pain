@@ -20,9 +20,9 @@ public abstract class SilverfishMixin extends Monster {
 		super(entityType, world);
 	}
 
-	@Inject(method = "registerGoals", at = @At("HEAD"))
+	@Inject(method = "registerGoals", at = @At("TAIL"))
 	private void attackGoals(CallbackInfo ci) {
-		if (TEPConfig.silverfish_attacks_villagers == true)
+		if (TEPConfig.SERVER.silverfish_attacks_villagers.get() == true)
 			this.targetSelector.addGoal(1, new NearestAttackableTargetGoal(this, AbstractVillager.class, false));
 	}
 }

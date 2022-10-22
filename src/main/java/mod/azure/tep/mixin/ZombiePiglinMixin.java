@@ -23,9 +23,9 @@ public abstract class ZombiePiglinMixin extends Monster {
 
 	@Inject(method = "addBehaviourGoals", at = @At("HEAD"))
 	private void attackGoals(CallbackInfo ci) {
-		if (TEPConfig.zombiepiglin_onsight == true)
+		if (TEPConfig.SERVER.zombiepiglin_onsight.get()  == true)
 			this.targetSelector.addGoal(1, new NearestAttackableTargetGoal(this, Player.class, false));
-		if (TEPConfig.zombiepiglin_attacks_villagers == true)
+		if (TEPConfig.SERVER.zombiepiglin_attacks_villagers.get()  == true)
 			this.targetSelector.addGoal(1, new NearestAttackableTargetGoal(this, AbstractVillager.class, false));
 	}
 

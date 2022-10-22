@@ -22,7 +22,7 @@ public abstract class ShulkerMixin extends AbstractGolem {
 
 	@Inject(method = "registerGoals", at = @At("HEAD"))
 	private void attackGoals(CallbackInfo ci) {
-		if (TEPConfig.shulker_attacks_villagers == true)
+		if (TEPConfig.SERVER.shulker_attacks_villagers.get() == true)
 			this.targetSelector.addGoal(1, new NearestAttackableTargetGoal(this, AbstractVillager.class, false));
 	}
 }

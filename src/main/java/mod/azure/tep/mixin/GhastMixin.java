@@ -22,7 +22,7 @@ public abstract class GhastMixin extends FlyingMob {
 
 	@Inject(method = "registerGoals", at = @At("HEAD"))
 	private void attackGoals(CallbackInfo ci) {
-		if (TEPConfig.ghast_attacks_villagers == true)
+		if (TEPConfig.SERVER.ghast_attacks_villagers.get() == true)
 			this.targetSelector.addGoal(1, new NearestAttackableTargetGoal(this, AbstractVillager.class, false));
 	}
 }
