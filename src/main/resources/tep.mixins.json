@@ -2,6 +2,7 @@
 	"required": true,
 	"minVersion": "0.8",
 	"package": "mod.azure.tep.mixin",
+	"refmap": "tep.refmap.json",
 	"compatibilityLevel": "JAVA_17",
 	"mixins": [
 		"BlazeMixin",
