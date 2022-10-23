@@ -15,8 +15,8 @@ public class TotallyEnoughPainMod {
 
 	public TotallyEnoughPainMod() {
 		instance = this;
-		ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, TEPConfig.SERVER_SPEC, "doom-newconfig.toml");
-		TEPConfig.loadConfig(TEPConfig.SERVER_SPEC, FMLPaths.CONFIGDIR.get().resolve("doom-newconfig.toml").toString());
+		ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, TEPConfig.SERVER_SPEC, "tep.toml");
+		TEPConfig.loadConfig(TEPConfig.SERVER_SPEC, FMLPaths.CONFIGDIR.get().resolve("tep.toml").toString());
 		MinecraftForge.EVENT_BUS.register(this);
 	}
 }
