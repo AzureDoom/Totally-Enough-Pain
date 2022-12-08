@@ -37,7 +37,7 @@ mixin {
 }
 
 minecraft {
-    mappings channel: 'parchment', version: '2022.09.04-1.19.2'
+    mappings channel: 'official', version: '1.19.3'
     runs {
         client {
             properties 'mixin.env.remapRefMap': 'true'
@@ -61,7 +61,7 @@ repositories {
 }
 
 dependencies {
-    minecraft 'net.minecraftforge:forge:1.19.2-43.1.43'
+    minecraft 'net.minecraftforge:forge:1.19.3-44.0.1'
 	annotationProcessor 'org.spongepowered:mixin:0.8.4:processor'
 }
 
@@ -92,7 +92,7 @@ if (file('key.properties').exists()) {
         	releaseType = "release"
         	changelogType = 'text'
         	changelog = file('CHANGELOG.txt')
-			addGameVersion("1.19.2")
+			addGameVersion("1.19.3")
 			addGameVersion("Forge")
 			addGameVersion("Java 17")
     	}
@@ -111,10 +111,10 @@ if (file('key.properties').exists()) {
 		token = modrinthProp.getProperty('modrinthKey')
 		projectId = 'zJ4xQwqI' 
 		versionNumber = project.mod_version 
-		versionName = 'Forge 1.19.2'
+		versionName = 'Forge 1.19.3'
 		uploadFile = jar 
 		changelog = rootProject.file("changelog.txt").text
-		gameVersions = ['1.19.2']
+		gameVersions = ['1.19.3']
 		loaders = ['forge']
 	}
 }
