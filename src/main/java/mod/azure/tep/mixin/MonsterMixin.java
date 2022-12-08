@@ -61,8 +61,7 @@ public abstract class MonsterMixin extends PathfinderMob implements VibrationLis
 	private void addShitz(EntityType<? extends PathfinderMob> entityType, Level level, CallbackInfo cir) {
 		if (TEPConfig.monsters_can_warden_sense == true)
 			this.dynamicGameEventListener = new DynamicGameEventListener<VibrationListener>(
-					new VibrationListener(new EntityPositionSource(this, this.getEyeHeight()),
-							TEPConfig.monster_sensing_range, this, null, 0.0f, 0));
+					new VibrationListener(new EntityPositionSource(this, this.getEyeHeight()), TEPConfig.monster_sensing_range, this));
 	}
 
 	public int getClientAngerLevel() {
