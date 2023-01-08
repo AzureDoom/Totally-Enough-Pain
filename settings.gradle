@@ -7,4 +7,4 @@ pluginManagement {
         gradlePluginPortal()
     }
 }
-rootProject.name = 'tep-1.19'
+rootProject.name = 'tep-1.19.2'

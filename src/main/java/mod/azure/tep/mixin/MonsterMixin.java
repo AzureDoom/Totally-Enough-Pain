@@ -45,10 +45,11 @@ import net.minecraft.world.level.gameevent.GameEventListener;
 import net.minecraft.world.level.gameevent.vibrations.VibrationListener;
 
 @Mixin(Monster.class)
-public abstract class MonsterMixin extends PathfinderMob implements VibrationListener.VibrationListenerConfig {
+public abstract class MonsterMixin extends PathfinderMob {
 
 	private static final Logger LOGGER = LogUtils.getLogger();
 	public DynamicGameEventListener<VibrationListener> dynamicGameEventListener;
+	private VibrationListener.VibrationListenerConfig vibrationListenerConfig;
 	private AngerManagement angerManagement = new AngerManagement(this::canTargetEntity, Collections.emptyList());
 	private static final EntityDataAccessor<Integer> CLIENT_ANGER_LEVEL = SynchedEntityData.defineId(Monster.class,
 			EntityDataSerializers.INT);
@@ -59,10 +60,10 @@ public abstract class MonsterMixin extends PathfinderMob implements VibrationLis
 
 	@Inject(at = @At("TAIL"), method = "<init>")
 	private void addShitz(EntityType<? extends PathfinderMob> entityType, Level level, CallbackInfo cir) {
-		if (TEPConfig.monsters_can_warden_sense == true)
-			this.dynamicGameEventListener = new DynamicGameEventListener<VibrationListener>(
-					new VibrationListener(new EntityPositionSource(this, this.getEyeHeight()),
-							TEPConfig.monster_sensing_range, this, null, 0.0f, 0));
+		this.vibrationListenerConfig = new MonsterVibrationListenerConfig();
+		this.dynamicGameEventListener = new DynamicGameEventListener<VibrationListener>(
+				new VibrationListener(new EntityPositionSource(this, this.getEyeHeight()),
+						TEPConfig.monster_sensing_range, this.vibrationListenerConfig, null, 0.0f, 0));
 	}
 
 	public int getClientAngerLevel() {
@@ -113,7 +114,8 @@ public abstract class MonsterMixin extends PathfinderMob implements VibrationLis
 	public void addAdditionalSaveData(CompoundTag compound) {
 		super.addAdditionalSaveData(compound);
 		if (TEPConfig.monsters_can_warden_sense == true) {
-			VibrationListener.codec(this).encodeStart(NbtOps.INSTANCE, this.dynamicGameEventListener.getListener())
+			VibrationListener.codec(this.vibrationListenerConfig)
+					.encodeStart(NbtOps.INSTANCE, this.dynamicGameEventListener.getListener())
 					.resultOrPartial(LOGGER::error).ifPresent(tag -> compound.put("listener", (Tag) tag));
 			AngerManagement.codec(this::canTargetEntity).encodeStart(NbtOps.INSTANCE, this.angerManagement)
 					.resultOrPartial(LOGGER::error).ifPresent(tag -> compound.put("anger", (Tag) tag));
@@ -125,7 +127,8 @@ public abstract class MonsterMixin extends PathfinderMob implements VibrationLis
 		super.readAdditionalSaveData(compound);
 		if (TEPConfig.monsters_can_warden_sense == true) {
 			if (compound.contains("listener", 10)) {
-				VibrationListener.codec(this).parse(new Dynamic<>(NbtOps.INSTANCE, compound.getCompound("listener")))
+				VibrationListener.codec(this.vibrationListenerConfig)
+						.parse(new Dynamic<>(NbtOps.INSTANCE, compound.getCompound("listener")))
 						.resultOrPartial(LOGGER::error).ifPresent(vibrationListener -> this.dynamicGameEventListener
 								.updateListener((VibrationListener) vibrationListener, this.level));
 			}
@@ -161,16 +164,6 @@ public abstract class MonsterMixin extends PathfinderMob implements VibrationLis
 		}
 	}
 
-	@Override
-	public TagKey<GameEvent> getListenableEvents() {
-		return GameEventTags.VIBRATIONS;
-	}
-
-	@Override
-	public boolean canTriggerAvoidVibration() {
-		return true;
-	}
-
 	/*
 	 * Enabled force condition propagation Lifted jumps to return sites
 	 */
@@ -195,28 +188,50 @@ public abstract class MonsterMixin extends PathfinderMob implements VibrationLis
 			return false;
 		if (!this.level.getWorldBorder().isWithinBounds(livingEntity.getBoundingBox()))
 			return false;
+		if (TEPConfig.monsters_can_warden_sense == false)
+			return false;
 		return true;
 	}
 
-	@Override
-	public boolean shouldListen(ServerLevel var1, GameEventListener var2, BlockPos var3, GameEvent var4, Context var5) {
-		@SuppressWarnings("unused")
-		LivingEntity livingEntity;
-		if (this.isNoAi() || this.isDeadOrDying() || !level.getWorldBorder().isWithinBounds(var3) || this.isRemoved()) {
-			return false;
+	class MonsterVibrationListenerConfig implements VibrationListener.VibrationListenerConfig {
+		MonsterVibrationListenerConfig() {
 		}
-		Entity entity = var5.sourceEntity();
-		return !(entity instanceof LivingEntity);
-	}
 
-	@Override
-	public void onSignalReceive(ServerLevel var1, GameEventListener var2, BlockPos var3, GameEvent var4, Entity var5,
-			Entity var6, float var7) {
-		if (this.isDeadOrDying()) {
-			return;
+		@Override
+		public void onSignalReceive(ServerLevel var1, GameEventListener var2, BlockPos var3, GameEvent var4,
+				Entity var5, Entity var6, float var7) {
+			if (MonsterMixin.this.isDeadOrDying()) {
+				return;
+			}
+			if (TEPConfig.monsters_can_warden_sense == true)
+				MonsterMixin.this.getNavigation().moveTo(var3.getX(), var3.getY(), var3.getZ(), 0.9F);
 		}
-		if (TEPConfig.monsters_can_warden_sense == true)
-			this.getNavigation().moveTo(var3.getX(), var3.getY(), var3.getZ(), 0.9F);
+
+		@Override
+		public boolean shouldListen(ServerLevel var1, GameEventListener var2, BlockPos var3, GameEvent var4,
+				Context var5) {
+			@SuppressWarnings("unused")
+			LivingEntity livingEntity;
+			if (MonsterMixin.this.isNoAi() || MonsterMixin.this.isDeadOrDying()
+					|| !level.getWorldBorder().isWithinBounds(var3) || MonsterMixin.this.isRemoved()
+					|| TEPConfig.monsters_can_warden_sense == false) {
+				return false;
+			}
+			Entity entity = var5.sourceEntity();
+			return !(entity instanceof LivingEntity);
+		}
+
+		@Override
+		public TagKey<GameEvent> getListenableEvents() {
+			return GameEventTags.VIBRATIONS;
+		}
+
+		@Override
+		public boolean canTriggerAvoidVibration() {
+			if (TEPConfig.monsters_can_warden_sense == false)
+				return false;
+			return true;
+		}
 	}
 
 }

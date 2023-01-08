@@ -1,6 +1,6 @@
 package mod.azure.tep;
 
-import mod.azure.tep.config.CustomMidnightConfig;
+import eu.midnightdust.lib.config.MidnightConfig;
 import mod.azure.tep.config.TEPConfig;
 import net.fabricmc.api.ModInitializer;
 
@@ -10,6 +10,6 @@ public class TotallyEnoughPainMod implements ModInitializer {
 
 	@Override
 	public void onInitialize() {
-		CustomMidnightConfig.init("tep", TEPConfig.class);
+		MidnightConfig.init("tep", TEPConfig.class);
 	}
 }
