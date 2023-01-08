@@ -1,5 +1,7 @@
 {
 	"tep.midnightconfig.title": "Totally Enough Pain Config",
+	"tep.midnightconfig.monsters_can_warden_sense": "Monsters Have Warden Sensing",
+	"tep.midnightconfig.monster_sensing_range": "Max Block Distance of Sensing",
 	"tep.midnightconfig.creeper_doesnt_stop": "Creeper Explodes Closer",
 	"tep.midnightconfig.creeper_always_charged": "Creeper Always Charged",
 	"tep.midnightconfig.creeper_explodes_faster": "Creeper Explodes Faster",

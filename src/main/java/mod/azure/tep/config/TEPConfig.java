@@ -1,6 +1,8 @@
 package mod.azure.tep.config;
 
-public class TEPConfig extends CustomMidnightConfig {
+import eu.midnightdust.lib.config.MidnightConfig;
+
+public class TEPConfig extends MidnightConfig {
 
 	@Entry
 	public static boolean monsters_can_warden_sense = true;

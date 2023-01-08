@@ -59,9 +59,8 @@ public abstract class MonsterMixin extends PathfinderMob implements VibrationLis
 
 	@Inject(at = @At("TAIL"), method = "<init>")
 	private void addShitz(EntityType<? extends PathfinderMob> entityType, Level level, CallbackInfo cir) {
-		if (TEPConfig.monsters_can_warden_sense == true)
-			this.dynamicGameEventListener = new DynamicGameEventListener<VibrationListener>(
-					new VibrationListener(new EntityPositionSource(this, this.getEyeHeight()), TEPConfig.monster_sensing_range, this));
+		this.dynamicGameEventListener = new DynamicGameEventListener<VibrationListener>(new VibrationListener(
+				new EntityPositionSource(this, this.getEyeHeight()), TEPConfig.monster_sensing_range, this));
 	}
 
 	public int getClientAngerLevel() {
@@ -167,6 +166,8 @@ public abstract class MonsterMixin extends PathfinderMob implements VibrationLis
 
 	@Override
 	public boolean canTriggerAvoidVibration() {
+		if (TEPConfig.monsters_can_warden_sense == false)
+			return false;
 		return true;
 	}
 
@@ -194,6 +195,8 @@ public abstract class MonsterMixin extends PathfinderMob implements VibrationLis
 			return false;
 		if (!this.level.getWorldBorder().isWithinBounds(livingEntity.getBoundingBox()))
 			return false;
+		if (TEPConfig.monsters_can_warden_sense == false)
+			return false;
 		return true;
 	}
 
@@ -201,7 +204,8 @@ public abstract class MonsterMixin extends PathfinderMob implements VibrationLis
 	public boolean shouldListen(ServerLevel var1, GameEventListener var2, BlockPos var3, GameEvent var4, Context var5) {
 		@SuppressWarnings("unused")
 		LivingEntity livingEntity;
-		if (this.isNoAi() || this.isDeadOrDying() || !level.getWorldBorder().isWithinBounds(var3) || this.isRemoved()) {
+		if (this.isNoAi() || this.isDeadOrDying() || !level.getWorldBorder().isWithinBounds(var3) || this.isRemoved()
+				|| TEPConfig.monsters_can_warden_sense == false) {
 			return false;
 		}
 		Entity entity = var5.sourceEntity();
