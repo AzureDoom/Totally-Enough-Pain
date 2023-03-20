@@ -127,7 +127,7 @@ if (file('key.properties').exists()) {
         	releaseType = "release"
         	changelogType = 'text'
         	changelog = file('CHANGELOG.txt')
-			addGameVersion("1.19.3")
+			addGameVersion("1.19.4")
 			addGameVersion("Fabric")
 			addGameVersion("Quilt")
 			addGameVersion("Java 17")
@@ -155,10 +155,10 @@ if (file('key.properties').exists()) {
 		token = modrinthProp.getProperty('modrinthKey')
 		projectId = 'zJ4xQwqI' 
 		versionNumber = project.mod_version 
-		versionName = 'Fabric/Quilt 1.19.3'
+		versionName = 'Fabric/Quilt 1.19.4'
 		uploadFile = remapJar 
 		changelog = rootProject.file("changelog.txt").text
-		gameVersions = ['1.19.3']
+		gameVersions = ['1.19.4']
 		loaders = ['fabric', 'quilt']
 		dependencies { 
         	required.project "fabric-api"
