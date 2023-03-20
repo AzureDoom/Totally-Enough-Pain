@@ -64,6 +64,6 @@ public abstract class SkeletonMixin extends Monster {
 
 	@Override
 	public boolean hurt(DamageSource source, float amount) {
-		return source == DamageSource.IN_WALL ? false : super.hurt(source, amount);
+		return source == damageSources().inWall() ? false : super.hurt(source, amount);
 	}
 }
