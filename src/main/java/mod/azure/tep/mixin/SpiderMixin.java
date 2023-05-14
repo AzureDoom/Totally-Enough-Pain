@@ -7,7 +7,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-import mod.azure.tep.config.TEPConfig;
+import mod.azure.tep.TotallyEnoughPainMod;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.entity.EntityType;
@@ -31,17 +31,15 @@ public abstract class SpiderMixin extends Monster {
 
 	@Inject(method = "registerGoals", at = @At("HEAD"))
 	private void attackGoals(CallbackInfo ci) {
-		if (TEPConfig.spider_always_attack == true)
+		if (TotallyEnoughPainMod.config.spider_always_attack == true)
 			this.targetSelector.addGoal(1, new NearestAttackableTargetGoal(this, Player.class, false));
-		if (TEPConfig.spider_attacks_villagers == true)
+		if (TotallyEnoughPainMod.config.spider_attacks_villagers == true)
 			this.targetSelector.addGoal(1, new NearestAttackableTargetGoal(this, AbstractVillager.class, false));
 	}
 
 	@Inject(method = "finalizeSpawn", at = @At("HEAD"), cancellable = true)
-	private void spiderJockeys(ServerLevelAccessor world, DifficultyInstance difficulty, MobSpawnType spawnReason,
-			@Nullable SpawnGroupData entityData, @Nullable CompoundTag entityNbt,
-			CallbackInfoReturnable<SpawnGroupData> cir) {
-		if (TEPConfig.spider_always_jockeys == true || world.getRandom().nextInt(100) == 0) {
+	private void spiderJockeys(ServerLevelAccessor world, DifficultyInstance difficulty, MobSpawnType spawnReason, @Nullable SpawnGroupData entityData, @Nullable CompoundTag entityNbt, CallbackInfoReturnable<SpawnGroupData> cir) {
+		if (TotallyEnoughPainMod.config.spider_always_jockeys == true || world.getRandom().nextInt(100) == 0) {
 			Skeleton skeletonEntity = (Skeleton) EntityType.SKELETON.create(this.level);
 			skeletonEntity.moveTo(this.getX(), this.getY(), this.getZ(), this.getYRot(), 0.0F);
 			skeletonEntity.finalizeSpawn(world, difficulty, spawnReason, (SpawnGroupData) null, null);

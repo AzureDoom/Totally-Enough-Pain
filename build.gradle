@@ -31,6 +31,7 @@ repositories {
 	maven { url 'https://www.cursemaven.com' }
     maven { url  = 'https://plugins.gradle.org/m2/' }
 	maven { url = "https://maven.terraformersmc.com/" }
+    maven { url 'https://dl.cloudsmith.io/public/azuredoom-mods/azurelib/maven/' }
 	maven { url 'https://api.modrinth.com/maven' }
 }
 
@@ -43,16 +44,16 @@ dependencies {
     mappings loom.officialMojangMappings()
 	modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
 	modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
-	modImplementation "maven.modrinth:midnightlib:1.0.0-fabric"
-    shade group: 'maven.modrinth', name: 'midnightlib', version: '1.0.0-fabric'
-	modImplementation ("com.terraformersmc:modmenu:4.0.5")
+    modImplementation "maven.modrinth:configuration:nGocYE6n"
+    shade group: 'maven.modrinth', name: 'configuration', version: 'nGocYE6n'
+    modImplementation "maven.modrinth:modmenu:4.2.0-beta.2"
 }
 
 shadowJar {
     configurations = [project.configurations.shade]
     from sourceSets.main.output
     duplicatesStrategy = 'exclude'
-    relocate 'eu.midnightdust', 'mod.azure.tep.shadowed.midnightlib'
+    relocate 'dev.toma.configuration', 'mod.azure.tep.shadowed.configuration'
     classifier 'dev'
 }
 
@@ -127,7 +128,6 @@ if (file('key.properties').exists()) {
         	releaseType = "release"
         	changelogType = 'text'
         	changelog = file('CHANGELOG.txt')
-			addGameVersion("1.19.1")
 			addGameVersion("1.19.2")
 			addGameVersion("Fabric")
 			addGameVersion("Java 17")
@@ -155,10 +155,10 @@ if (file('key.properties').exists()) {
 		token = modrinthProp.getProperty('modrinthKey')
 		projectId = 'zJ4xQwqI' 
 		versionNumber = project.mod_version 
-		versionName = 'Fabric/Quilt 1.19'
+		versionName = 'Fabric/Quilt 1.19.2'
 		uploadFile = remapJar 
 		changelog = rootProject.file("changelog.txt").text
-		gameVersions = ['1.19', '1.19.1', '1.19.2']
+		gameVersions = ['1.19.2']
 		loaders = ['fabric', 'quilt']
 		dependencies { 
         	required.project "fabric-api"
