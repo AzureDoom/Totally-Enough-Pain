@@ -1,6 +1,6 @@
 package mod.azure.tep.config;
 
-import dev.toma.configuration.config.Configurable;
+import mod.azure.azurelib.config.Configurable;
 
 public class TEPConfig {
 

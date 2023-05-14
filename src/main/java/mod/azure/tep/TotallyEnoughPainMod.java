@@ -1,7 +1,7 @@
 package mod.azure.tep;
 
-import dev.toma.configuration.Configuration;
-import dev.toma.configuration.config.format.ConfigFormats;
+import mod.azure.azurelib.AzureLibMod;
+import mod.azure.azurelib.config.format.ConfigFormats;
 import mod.azure.tep.config.TEPConfig;
 import net.fabricmc.api.ModInitializer;
 
@@ -11,6 +11,6 @@ public class TotallyEnoughPainMod implements ModInitializer {
 
 	@Override
 	public void onInitialize() {
-		config = Configuration.registerConfig(TEPConfig.class, ConfigFormats.json()).getConfigInstance();
+		config = AzureLibMod.registerConfig(TEPConfig.class, ConfigFormats.json()).getConfigInstance();
 	}
 }
