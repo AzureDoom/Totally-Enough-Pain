@@ -5,7 +5,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import mod.azure.tep.config.TEPConfig;
+import mod.azure.tep.TotallyEnoughPainMod;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
 import net.minecraft.world.entity.monster.EnderMan;
@@ -23,9 +23,9 @@ public abstract class EndermanMixin extends Monster {
 
 	@Inject(method = "registerGoals", at = @At("HEAD"))
 	private void attackGoals(CallbackInfo ci) {
-		if (TEPConfig.enderman_always_attack == true)
+		if (TotallyEnoughPainMod.config.enderman_always_attack == true)
 			this.targetSelector.addGoal(1, new NearestAttackableTargetGoal(this, Player.class, false));
-		if (TEPConfig.enderman_attacks_villagers == true)
+		if (TotallyEnoughPainMod.config.enderman_attacks_villagers == true)
 			this.targetSelector.addGoal(1, new NearestAttackableTargetGoal(this, AbstractVillager.class, false));
 	}
 }

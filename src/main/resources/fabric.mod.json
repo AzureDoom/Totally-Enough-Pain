@@ -19,9 +19,6 @@
 	"entrypoints": {
 		"main": [
 			"mod.azure.tep.TotallyEnoughPainMod"
-		],
-		"modmenu": [
-			"mod.azure.tep.config.ModMenuTEP"
 		]
 	},
 	"mixins": [
