@@ -41,8 +41,8 @@ dependencies {
     mappings loom.officialMojangMappings()
 	modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
 	modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
-  	modImplementation 'mod.azure.azurelib:azurelib-fabric-1.19.4:1.0.13'
-	modImplementation ("com.terraformersmc:modmenu:6.1.0-rc.4")
+  	modImplementation 'mod.azure.azurelib:azurelib-fabric-1.20:1.0.9'
+	modImplementation ("com.terraformersmc:modmenu:7.0.0-beta.2")
 }
 
 processResources {
@@ -107,7 +107,7 @@ if (file('key.properties').exists()) {
         	releaseType = "release"
         	changelogType = 'text'
         	changelog = file('CHANGELOG.txt')
-			addGameVersion("1.19.4")
+			addGameVersion("1.20")
 			addGameVersion("Fabric")
 			addGameVersion("Quilt")
 			addGameVersion("Java 17")
@@ -136,10 +136,10 @@ if (file('key.properties').exists()) {
 		token = modrinthProp.getProperty('modrinthKey')
 		projectId = 'zJ4xQwqI' 
 		versionNumber = project.mod_version 
-		versionName = 'Fabric/Quilt 1.19.4'
+		versionName = 'Fabric/Quilt 1.20'
 		uploadFile = remapJar 
 		changelog = rootProject.file("changelog.txt").text
-		gameVersions = ['1.19.4']
+		gameVersions = ['1.20']
 		loaders = ['fabric', 'quilt']
 		dependencies { 
         	required.project "fabric-api"
