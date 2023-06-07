@@ -1,7 +1,9 @@
 package mod.azure.tep.config;
 
+import mod.azure.azurelib.config.Config;
 import mod.azure.azurelib.config.Configurable;
 
+@Config(id = "tep")
 public class TEPConfig {
 
 	@Configurable
