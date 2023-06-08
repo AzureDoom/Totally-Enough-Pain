@@ -83,13 +83,13 @@ public abstract class ZombieMixin extends Monster {
 		if (TEPConfig.SERVER.zombies_better_gear.get() == true) {
 			int i = this.random.nextInt(3);
 			if (i == 0) {
-				this.setItemSlot(EquipmentSlot.MAINHAND, new ItemStack(this.level.getDifficulty() == Difficulty.HARD
+				this.setItemSlot(EquipmentSlot.MAINHAND, new ItemStack(this.getCommandSenderWorld().getDifficulty() == Difficulty.HARD
 						? Items.DIAMOND_SWORD
-						: this.level.getDifficulty() == Difficulty.EASY ? Items.GOLDEN_SWORD : Items.IRON_SWORD));
+						: this.getCommandSenderWorld().getDifficulty() == Difficulty.EASY ? Items.GOLDEN_SWORD : Items.IRON_SWORD));
 			} else {
-				this.setItemSlot(EquipmentSlot.MAINHAND, new ItemStack(this.level.getDifficulty() == Difficulty.HARD
+				this.setItemSlot(EquipmentSlot.MAINHAND, new ItemStack(this.getCommandSenderWorld().getDifficulty() == Difficulty.HARD
 						? Items.DIAMOND_SHOVEL
-						: this.level.getDifficulty() == Difficulty.EASY ? Items.GOLDEN_SHOVEL : Items.IRON_SHOVEL));
+						: this.getCommandSenderWorld().getDifficulty() == Difficulty.EASY ? Items.GOLDEN_SHOVEL : Items.IRON_SHOVEL));
 			}
 		}
 	}
