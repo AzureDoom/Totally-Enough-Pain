@@ -17,7 +17,7 @@ buildscript {
 plugins {
     id 'eclipse'
     id 'maven-publish'
-    id 'net.minecraftforge.gradle' version '[6.0,6.2)'
+    id 'net.minecraftforge.gradle' version '5.1.+'
     id 'org.parchmentmc.librarian.forgegradle' version '1.+'
 }
 apply plugin: 'org.spongepowered.mixin'
@@ -44,7 +44,7 @@ minecraft {
             property 'mixin.env.refMapRemappingFile', "${project.projectDir}/build/createSrgToMcp/output.srg"
             arg "-mixin.config=tep.mixins.json"
             workingDirectory project.file('run')
-            taskName 'tep1.19_client'
+            taskName 'tep1.20_client'
             mods {
                 tep {
                     source sourceSets.main
@@ -58,10 +58,12 @@ sourceSets.main.resources { srcDir 'src/generated/resources' }
 
 repositories {
     maven { url = 'https://maven.parchmentmc.org' }
+    maven { url 'https://dl.cloudsmith.io/public/azuredoom-mods/azurelib/maven/' }
 }
 
 dependencies {
-    minecraft 'net.minecraftforge:forge:1.20-46.0.1'
+    minecraft 'net.minecraftforge:forge:1.20-46.0.14'
+  	implementation fg.deobf('mod.azure.azurelib:azurelib-forge-1.20:1.0.14')
 	annotationProcessor 'org.spongepowered:mixin:0.8.4:processor'
 }
 

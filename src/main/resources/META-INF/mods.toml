@@ -24,3 +24,9 @@ Minecraft Hardcore mod
     versionRange="[1.20,)"
     ordering="NONE"
     side="BOTH"
+[[dependencies.tep]]
+    modId="azurelib"
+    mandatory=true
+    versionRange="[1.0.13,)"
+    ordering="BEFORE"
+    side="BOTH"
