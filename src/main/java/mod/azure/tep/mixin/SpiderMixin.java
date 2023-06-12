@@ -42,7 +42,7 @@ public abstract class SpiderMixin extends Monster {
 			@Nullable SpawnGroupData entityData, @Nullable CompoundTag entityNbt,
 			CallbackInfoReturnable<SpawnGroupData> cir) {
 		if (TotallyEnoughPainMod.config.spider_always_jockeys == true || world.getRandom().nextInt(100) == 0) {
-			Skeleton skeletonEntity = (Skeleton) EntityType.SKELETON.create(this.getCommandSenderWorld());
+			Skeleton skeletonEntity = (Skeleton) EntityType.SKELETON.create(this.level());
 			skeletonEntity.moveTo(this.getX(), this.getY(), this.getZ(), this.getYRot(), 0.0F);
 			skeletonEntity.finalizeSpawn(world, difficulty, spawnReason, (SpawnGroupData) null, null);
 			skeletonEntity.startRiding(this);
