@@ -1,4 +1,3 @@
-v.1.0.17
+v.1.0.18
 
-- Fixes crash due to Vibration system
-- Now requires AzureLib
+- Updated to 1.20.1

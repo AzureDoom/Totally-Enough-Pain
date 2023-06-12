@@ -37,7 +37,7 @@ mixin {
 }
 
 minecraft {
-    mappings channel: 'official', version: '1.20'
+    mappings channel: 'official', version: '1.20.1'
     runs {
         client {
             properties 'mixin.env.remapRefMap': 'true'
@@ -62,8 +62,8 @@ repositories {
 }
 
 dependencies {
-    minecraft 'net.minecraftforge:forge:1.20-46.0.14'
-  	implementation fg.deobf('mod.azure.azurelib:azurelib-forge-1.20:1.0.14')
+    minecraft 'net.minecraftforge:forge:1.20.1-47.0.0'
+  	implementation fg.deobf('mod.azure.azurelib:azurelib-forge-1.20.1:1.0.15')
 	annotationProcessor 'org.spongepowered:mixin:0.8.4:processor'
 }
 
@@ -94,7 +94,7 @@ if (file('key.properties').exists()) {
         	releaseType = "release"
         	changelogType = 'text'
         	changelog = file('CHANGELOG.txt')
-			addGameVersion("1.20")
+			addGameVersion("1.20.1")
 			addGameVersion("Forge")
 			addGameVersion("Java 17")
 
@@ -117,10 +117,10 @@ if (file('key.properties').exists()) {
 		token = modrinthProp.getProperty('modrinthKey')
 		projectId = 'zJ4xQwqI' 
 		versionNumber = project.mod_version 
-		versionName = 'Forge 1.20'
+		versionName = 'Forge 1.20.1'
 		uploadFile = jar 
 		changelog = rootProject.file("changelog.txt").text
-		gameVersions = ['1.20']
+		gameVersions = ['1.20.1']
 		loaders = ['forge']
 		dependencies { 
         	required.project "azurelib"
