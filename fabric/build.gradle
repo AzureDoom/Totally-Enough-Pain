@@ -1,0 +1,113 @@
+plugins {
+    id 'java'
+    id 'idea'
+    id 'maven-publish'
+    id 'fabric-loom'
+    id "me.modmuss50.mod-publish-plugin"
+}
+
+base {
+    archivesName = "${mod_id}-fabric-${minecraft_version}"
+}
+
+repositories {
+    mavenCentral()
+    maven { url 'https://libs.azuredoom.com:4443/mods' }
+    maven { url 'https://api.modrinth.com/maven' }
+    maven { url "https://cfa2.cursemaven.com" }
+    maven { url "https://plugins.gradle.org/m2/" }
+    maven { url "https://maven.terraformersmc.com/" }
+    maven { url "https://maven.terraformersmc.com/releases" } // modmenu
+    maven { url 'https://maven.kosmx.dev/' }
+    maven { url 'https://jitpack.io' }
+}
+
+dependencies {
+    minecraft "com.mojang:minecraft:${minecraft_version}"
+    mappings loom.officialMojangMappings()
+    modImplementation "net.fabricmc:fabric-loader:${fabric_loader_version}"
+    modImplementation "net.fabricmc.fabric-api:fabric-api:${fabric_version}"
+    compileOnly "com.google.code.findbugs:jsr305:${google_findbugs_version}"
+    modImplementation "mod.azure.azurelib:azurelib-fabric-1.20.4:${azurelib_version}"
+    modApi "com.terraformersmc:modmenu:${modmenu_version}"
+    compileOnly project(":common")
+}
+
+loom {
+    if (project(":common").file("src/main/resources/${mod_id}.aw").exists()) {
+        accessWidenerPath.set(project(":common").file("src/main/resources/${mod_id}.aw"))
+    }
+    mixin {
+        defaultRefmapName.set("${mod_id}.refmap.json")
+    }
+    runs {
+        client {
+            client()
+            setConfigName("Fabric Client")
+            ideConfigGenerated(true)
+            runDir("runClient")
+        }
+        server {
+            server()
+            setConfigName("Fabric Server")
+            ideConfigGenerated(true)
+            runDir("runServer")
+        }
+    }
+}
+
+tasks.withType(JavaCompile).configureEach {
+    source(project(":common").sourceSets.main.allSource)
+}
+
+processResources {
+    from project(":common").sourceSets.main.resources
+}
+
+// TODO: Everything below here might be fine to move to the top-level build.gradle file.
+// They were originally in the previous fabric build.gradle. - bvanseg
+
+tasks.withType(JavaCompile).configureEach {
+    it.options.release = 17
+}
+
+jar {
+    from "LICENSE"
+}
+
+if (file('key.properties').exists()) {
+    publishMods {
+        def releaseProp = new Properties()
+        File secretPropsFile = file("key.properties")
+        releaseProp.load(secretPropsFile.newInputStream())
+        file = remapJar.archiveFile
+        changelog = rootProject.file("changelog.md").text
+        type = STABLE
+        modLoaders.add("fabric")
+        modLoaders.add("quilt")
+
+        curseforge {
+            projectId = project.curseforgeID
+            projectSlug = project.projectSlug
+            accessToken = releaseProp.getProperty("curseKey")
+            minecraftVersions.add("${minecraft_version}")
+            requires {
+                slug = "fabric-api"
+            }
+            requires {
+                slug = "azurelib"
+            }
+        }
+        modrinth {
+            projectId = project.modrinthID
+            accessToken = releaseProp.getProperty('modrinthKey')
+            minecraftVersions.add("${minecraft_version}")
+            requires {
+                slug = "fabric-api"
+            }
+            requires {
+                slug = "azurelib"
+            }
+        }
+    }
+}
