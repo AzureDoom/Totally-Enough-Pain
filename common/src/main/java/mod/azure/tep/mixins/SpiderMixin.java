@@ -1,6 +1,5 @@
 package mod.azure.tep.mixins;
 
-import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -8,7 +7,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import mod.azure.tep.CommonMod;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobSpawnType;
@@ -38,13 +36,11 @@ public abstract class SpiderMixin extends Monster {
 	}
 
 	@Inject(method = "finalizeSpawn", at = @At("HEAD"), cancellable = true)
-	private void spiderJockeys(ServerLevelAccessor world, DifficultyInstance difficulty, MobSpawnType spawnReason,
-			@Nullable SpawnGroupData entityData, @Nullable CompoundTag entityNbt,
-			CallbackInfoReturnable<SpawnGroupData> cir) {
-		if (CommonMod.config.spider_always_jockeys || world.getRandom().nextInt(100) == 0) {
-			Skeleton skeletonEntity = (Skeleton) EntityType.SKELETON.create(this.level());
+	private void spiderJockeys(ServerLevelAccessor level, DifficultyInstance difficulty, MobSpawnType spawnType, SpawnGroupData spawnGroupData, CallbackInfoReturnable<SpawnGroupData> cir) {
+		if (CommonMod.config.spider_always_jockeys || level.getRandom().nextInt(100) == 0) {
+			Skeleton skeletonEntity = EntityType.SKELETON.create(this.level());
 			skeletonEntity.moveTo(this.getX(), this.getY(), this.getZ(), this.getYRot(), 0.0F);
-			skeletonEntity.finalizeSpawn(world, difficulty, spawnReason, (SpawnGroupData) null, null);
+			skeletonEntity.finalizeSpawn(level, difficulty, spawnType, spawnGroupData);
 			skeletonEntity.startRiding(this);
 		}
 	}

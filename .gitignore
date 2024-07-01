@@ -33,4 +33,3 @@ runs
 # Files from Forge MDK
 forge*changelog.txt
 build.bat
-*.bat

@@ -19,6 +19,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.ServerLevelAccessor;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -58,16 +59,13 @@ public abstract class ZombieMixin extends Monster {
     }
 
     @Inject(method = "finalizeSpawn", at = @At("HEAD"))
-    private void enchantedArmor(ServerLevelAccessor world, DifficultyInstance difficulty, MobSpawnType spawnReason,
-                                @Nullable SpawnGroupData entityData, @Nullable CompoundTag entityNbt,
-                                CallbackInfoReturnable<SpawnGroupData> ci) {
-        this.populateDefaultEquipmentEnchantments(difficulty);
+    private void enchantedArmor(ServerLevelAccessor level, DifficultyInstance difficulty, MobSpawnType spawnType, SpawnGroupData spawnGroupData, CallbackInfoReturnable<SpawnGroupData> cir) {
+        this.populateDefaultEquipmentEnchantments(level, level.getRandom(), difficulty);
         SplittableRandom random = new SplittableRandom();
         int r = random.nextInt(0, 10);
         if (CommonMod.config.zombies_runners && r <= 3) {
             entityAttributeInstance.addTransientModifier(
-                    new AttributeModifier(UUID.fromString("2cd5b1d6-6ce6-44ab-ac3b-1d0aecd1d0cd"), "Speed boost",
-                            0.5D, AttributeModifier.Operation.MULTIPLY_BASE));
+                    new AttributeModifier(CommonMod.modResource("speed_boost"),0.5D, AttributeModifier.Operation.ADD_MULTIPLIED_BASE));
 
         }
     }
@@ -90,13 +88,13 @@ public abstract class ZombieMixin extends Monster {
         }
     }
 
-    protected void populateDefaultEquipmentEnchantments(DifficultyInstance difficulty) {
+    protected void populateDefaultEquipmentEnchantments(@NotNull ServerLevelAccessor level, @NotNull RandomSource random, DifficultyInstance difficulty) {
         float f = difficulty.getSpecialMultiplier();
-        this.enchantSpawnedWeapon(random, f * CommonMod.config.zombies_enchanted_more);
+        this.enchantSpawnedEquipment(level, EquipmentSlot.MAINHAND, random, f * CommonMod.config.zombies_enchanted_more, difficulty);
         EquipmentSlot[] var3 = EquipmentSlot.values();
         for (EquipmentSlot equipmentSlot : var3) {
-            if (equipmentSlot.getType() == EquipmentSlot.Type.ARMOR) {
-                this.enchantSpawnedArmor(random, f * CommonMod.config.zombies_enchanted_more, equipmentSlot);
+            if (equipmentSlot.getType() == EquipmentSlot.Type.HUMANOID_ARMOR) {
+                this.enchantSpawnedEquipment(level, equipmentSlot, random, f * CommonMod.config.zombies_enchanted_more, difficulty);
             }
         }
     }

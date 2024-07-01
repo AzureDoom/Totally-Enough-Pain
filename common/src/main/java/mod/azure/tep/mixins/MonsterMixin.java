@@ -3,7 +3,7 @@ package mod.azure.tep.mixins;
 import com.mojang.logging.LogUtils;
 import com.mojang.serialization.Dynamic;
 import mod.azure.azurelib.common.api.common.interfaces.AzureTicker;
-import mod.azure.tep.AzureVibrationUserTEP;
+import mod.azure.tep.AzureVibrationUser;
 import mod.azure.tep.CommonMod;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtOps;
@@ -40,7 +40,7 @@ public abstract class MonsterMixin extends PathfinderMob implements VibrationSys
     @Inject(at = @At("TAIL"), method = "<init>")
     private void addShitz(EntityType<? extends PathfinderMob> entityType, Level level, CallbackInfo cir) {
         this.vibrationData = new VibrationSystem.Data();
-        this.vibrationUser = new AzureVibrationUserTEP(this, 0.9F, CommonMod.config.monster_sensing_range);
+        this.vibrationUser = new AzureVibrationUser(this, 0.9F);
         this.dynamicGameEventListener = new DynamicGameEventListener<>(new VibrationSystem.Listener(this));
     }
 

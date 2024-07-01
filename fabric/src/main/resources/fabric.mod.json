@@ -23,11 +23,12 @@
   "mixins": [
     "${mod_id}.fabric.mixins.json"
   ],
+  "accessWidener": "${mod_id}.accesswidener",
   "depends": {
     "fabricloader": ">=${fabric_loader_version}",
     "fabric-api": "*",
     "java": ">=17",
-    "azurelib": "~2.1.6",
+    "azurelib": "~${azurelib_version}",
     "minecraft": "~${minecraft_version}"
   }
 }

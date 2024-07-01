@@ -1,0 +1,2 @@
+accessWidener	v1	named
+accessible method net/minecraft/world/entity/Mob enchantSpawnedEquipment (Lnet/minecraft/world/level/ServerLevelAccessor;Lnet/minecraft/world/entity/EquipmentSlot;Lnet/minecraft/util/RandomSource;FLnet/minecraft/world/DifficultyInstance;)V

@@ -18,6 +18,7 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.util.function.Predicate;
 
@@ -31,21 +32,15 @@ public abstract class CreeperMixin extends Monster {
         super(entityType, world);
     }
 
-    @Shadow
-    private static final EntityDataAccessor<Boolean> DATA_IS_POWERED = SynchedEntityData.defineId(Creeper.class,
-            EntityDataSerializers.BOOLEAN);
-
-    @Shadow
-    private static final EntityDataAccessor<Integer> DATA_SWELL_DIR = SynchedEntityData.defineId(Creeper.class,
-            EntityDataSerializers.INT);
-
     private static final Predicate<Difficulty> DOOR_BREAK_DIFFICULTY_CHECKER = difficulty ->
             difficulty == Difficulty.HARD || difficulty == Difficulty.EASY || difficulty == Difficulty.NORMAL;
 
-    @Inject(method = "tick", at = @At("HEAD"))
-    private void superCharged(CallbackInfo ci) {
-        if (CommonMod.config.creeper_always_charged)
-            this.entityData.set(DATA_IS_POWERED, true);
+    @Inject(method = "isPowered", at = @At("HEAD"), cancellable = true)
+    private void setCharged(CallbackInfoReturnable<Boolean> cir){
+        if (CommonMod.config.creeper_always_charged) {
+            cir.setReturnValue(true);
+            cir.cancel();
+        }
     }
 
     @Inject(method = "registerGoals", at = @At("HEAD"))
